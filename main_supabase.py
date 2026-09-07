@@ -23,7 +23,7 @@ if sys.platform == 'win32':
     except Exception:
         pass
 
-from src.pipeline_supabase import run_supabase_pipeline, load_settings
+from src.pipeline_supabase import run_supabase_pipeline, load_settings, sync_supabase_dates
 from src.supabase_publisher import SupabasePublisher
 from src.ollama_client import OllamaClient
 from src.auth import get_credentials
@@ -61,6 +61,15 @@ def main():
         '--dry-run',
         action='store_true',
         help='Modo simulação para a importação em lote'
+    )
+
+    # Comando: sync-dates
+    sync_parser = subparsers.add_parser('sync-dates', help='Atualiza as datas dos artigos no Supabase a partir das planilhas')
+    sync_parser.add_argument(
+        '--config',
+        type=str,
+        default=None,
+        help='Caminho alternativo para settings.yaml'
     )
 
     # Comando: test
@@ -124,6 +133,11 @@ def main():
     if args.command == 'import-all':
         print("\n🚀 INICIANDO IMPORTAÇÃO EM LOTE DE TODAS AS NOTÍCIAS...\n")
         run_supabase_pipeline(dry_run=args.dry_run, import_all=True)
+        return
+
+    if args.command == 'sync-dates':
+        print("\n📅 INICIANDO SINCRONIZAÇÃO DE DATAS COM AS PLANILHAS...\n")
+        sync_supabase_dates(settings_path=getattr(args, 'config', None))
         return
 
     if args.command == 'run':

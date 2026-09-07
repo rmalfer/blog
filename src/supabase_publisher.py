@@ -115,6 +115,11 @@ class SupabasePublisher:
             'sheet_row': data.get('sheet_row'),
         }
 
+        if data.get('published_at'):
+            payload['published_at'] = data['published_at']
+        if data.get('created_at'):
+            payload['created_at'] = data['created_at']
+
         # 1. Verifica se o artigo com este slug já existe
         check_url = f"{self.url}/rest/v1/articles?slug=eq.{slug}&select=id,slug"
         try:

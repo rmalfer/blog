@@ -11,6 +11,7 @@ import yaml
 from pathlib import Path
 from datetime import datetime
 from typing import Optional, Dict, Any, List
+import requests
 
 if sys.platform == 'win32':
     try:
@@ -55,6 +56,36 @@ def setup_logging(settings: dict):
         ]
     )
     logger.info("Logging do Pipeline Supabase configurado: %s", log_file)
+
+
+def parse_sheet_date(date_str: str, row_number: int = 0) -> str:
+    """
+    Converte a string da 'Data de Inclusão' para formato ISO 8601 com timezone.
+    Exemplos aceitos: '2026-08-05', '05/08/2026', '2026-08-05T12:00:00'.
+    Define hora padrão em 12:mm:ss no fuso horário de Brasília (-03:00) para garantir
+    que renderizações em fusos locais não alterem o dia exibido.
+    """
+    if not date_str:
+        return datetime.now().astimezone().isoformat()
+
+    date_clean = str(date_str).strip()
+    seconds = min(row_number % 60, 59)
+    minutes = min((row_number // 60) % 60, 59)
+    try:
+        if len(date_clean) == 10 and '-' in date_clean:
+            dt = datetime.strptime(date_clean, "%Y-%m-%d")
+            return f"{dt.strftime('%Y-%m-%d')}T12:{minutes:02d}:{seconds:02d}-03:00"
+        elif len(date_clean) == 10 and '/' in date_clean:
+            dt = datetime.strptime(date_clean, "%d/%m/%Y")
+            return f"{dt.strftime('%Y-%m-%d')}T12:{minutes:02d}:{seconds:02d}-03:00"
+        else:
+            dt = datetime.fromisoformat(date_clean)
+            if dt.tzinfo is None:
+                return f"{dt.strftime('%Y-%m-%d')}T12:{minutes:02d}:{seconds:02d}-03:00"
+            return dt.isoformat()
+    except Exception as e:
+        logger.warning("Não foi possível converter data '%s': %s. Usando data atual.", date_str, e)
+        return datetime.now().astimezone().isoformat()
 
 
 def run_supabase_pipeline(
@@ -178,6 +209,8 @@ def run_supabase_pipeline(
                         if image_url:
                             logger.info("Imagem de capa encontrada: %s", image_url)
 
+                    published_date = parse_sheet_date(item.get('date', ''), item.get('row_number', 0))
+
                     article_data = {
                         'title': title,
                         'content': content,
@@ -191,6 +224,8 @@ def run_supabase_pipeline(
                         'is_featured': (idx == 1 and not import_all),
                         'sheet_source': source_id,
                         'sheet_row': item['row_number'],
+                        'published_at': published_date,
+                        'created_at': published_date,
                     }
 
                     if dry_run:
@@ -234,3 +269,95 @@ def run_supabase_pipeline(
         results['end_time'] = datetime.now().isoformat()
 
     return results
+
+
+def sync_supabase_dates(settings_path: str = None) -> dict:
+    """
+    Atualiza as datas de publicação (published_at e created_at) dos artigos existentes no Supabase
+    cruzando com a coluna 'Data de Inclusão' das planilhas Google Sheets configuradas.
+    """
+    settings = load_settings(settings_path)
+    setup_logging(settings)
+
+    logger.info("=" * 65)
+    logger.info("INICIANDO SINCRONIZAÇÃO DE DATAS SUPABASE <- GOOGLE SHEETS")
+    logger.info("=" * 65)
+
+    creds = get_credentials()
+    sources = settings.get('sources', [])
+    sheet_items_by_coord = {}
+    sheet_items_by_slug = {}
+
+    for source in sources:
+        source_id = source.get('id', 'sheet')
+        sheet_id = source['spreadsheet_id']
+        sheet_name = source.get('sheet_name', 'Página1')
+        reader = SheetsReader(credentials=creds, spreadsheet_id=sheet_id, sheet_name=sheet_name)
+        news_items = reader.get_all_news()
+        logger.info("Lidas %d notícias da fonte '%s'", len(news_items), source_id)
+        for item in news_items:
+            coord = (source_id, item['row_number'])
+            sheet_items_by_coord[coord] = item
+            slug = slugify(item['title'])
+            sheet_items_by_slug[slug] = item
+
+    supabase_config = settings.get('supabase', {})
+    api_key = supabase_config.get('service_role_key') or supabase_config.get('publishable_key')
+    headers = {
+        'apikey': api_key,
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation',
+        'Range': '0-999',
+    }
+    url = f"{supabase_config['url'].rstrip('/')}/rest/v1/articles?select=id,title,slug,sheet_source,sheet_row,published_at,created_at"
+    res = requests.get(url, headers=headers, timeout=20)
+    res.raise_for_status()
+    db_articles = res.json()
+
+    logger.info("Total de artigos encontrados no Supabase: %d", len(db_articles))
+
+    updated_count = 0
+    errors_count = 0
+    skipped_count = 0
+
+    for art in db_articles:
+        coord = (art.get('sheet_source'), art.get('sheet_row'))
+        item = sheet_items_by_coord.get(coord)
+        if not item:
+            item = sheet_items_by_slug.get(art.get('slug'))
+
+        if not item or not item.get('date'):
+            logger.warning("Artigo ID %s ('%s') sem correspondência na planilha com data", art['id'], art['title'])
+            skipped_count += 1
+            continue
+
+        target_iso = parse_sheet_date(item['date'], item.get('row_number', 0))
+
+        patch_url = f"{supabase_config['url'].rstrip('/')}/rest/v1/articles?id=eq.{art['id']}"
+        patch_payload = {
+            'published_at': target_iso,
+            'created_at': target_iso
+        }
+        try:
+            patch_res = requests.patch(patch_url, json=patch_payload, headers=headers, timeout=15)
+            patch_res.raise_for_status()
+            logger.info("✅ Artigo [%s] '%s' atualizado para data: %s", art['id'][:8], art['title'][:40], target_iso)
+            updated_count += 1
+        except Exception as e:
+            logger.error("❌ Falha ao atualizar artigo [%s]: %s", art['id'], e)
+            errors_count += 1
+
+    logger.info("=" * 65)
+    logger.info("SINCRONIZAÇÃO DE DATAS CONCLUÍDA")
+    logger.info("Total: %d | Atualizados: %d | Pulados: %d | Erros: %d",
+                len(db_articles), updated_count, skipped_count, errors_count)
+    logger.info("=" * 65)
+
+    return {
+        'total': len(db_articles),
+        'updated': updated_count,
+        'skipped': skipped_count,
+        'errors': errors_count
+    }
+

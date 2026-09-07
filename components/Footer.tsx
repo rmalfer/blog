@@ -111,16 +111,6 @@ export function Footer() {
                   Mapa do Site (XML Sitemap)
                 </Link>
               </li>
-              <li>
-                <Link href="/admin" className="text-neutral-400 hover:text-emerald-400 transition-colors">
-                  Acesso Administrativo
-                </Link>
-              </li>
-              <li>
-                <span className="text-neutral-500 text-xs block pt-2">
-                  Hospedado na <strong>Vercel</strong> com infraestrutura global distribuída e banco de dados em tempo real <strong>Supabase</strong>.
-                </span>
-              </li>
             </ul>
           </div>
         </div>

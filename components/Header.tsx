@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Menu, X, Bot, Shield, ChevronRight } from 'lucide-react';
+import { Search, Menu, X, Bot, ChevronRight } from 'lucide-react';
 
 const NAV_LINKS = [
   { label: 'Início', href: '/' },
@@ -56,13 +56,6 @@ export function Header() {
             <span className="hidden md:inline-block text-neutral-400">
               Por Riccardo Malfer
             </span>
-            <Link
-              href="/admin"
-              className="flex items-center gap-1 text-neutral-300 hover:text-emerald-400 transition-colors bg-neutral-900 px-2 py-0.5 rounded border border-neutral-700"
-            >
-              <Shield className="w-3 h-3 text-emerald-400" />
-              <span>Admin</span>
-            </Link>
           </div>
         </div>
       </div>
@@ -201,16 +194,6 @@ export function Header() {
               </Link>
             );
           })}
-          <div className="pt-4 border-t border-neutral-200">
-            <Link
-              href="/admin"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-2.5 bg-neutral-900 text-white rounded font-bold text-sm"
-            >
-              <Shield className="w-4 h-4 text-emerald-400" />
-              <span>Acessar Painel Admin</span>
-            </Link>
-          </div>
         </div>
       )}
     </header>

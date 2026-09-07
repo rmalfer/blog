@@ -23,7 +23,7 @@ export default function SyncAdminPage() {
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="flex items-center justify-between border-b border-neutral-200 pb-4">
         <Link
-          href="/admin"
+          href="/futuroadmin"
           className="inline-flex items-center gap-2 text-xs font-bold text-neutral-500 hover:text-black uppercase tracking-wider"
         >
           <ArrowLeft className="w-4 h-4" />

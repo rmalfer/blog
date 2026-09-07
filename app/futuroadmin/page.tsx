@@ -159,14 +159,14 @@ export default function AdminPage() {
 
         <div className="flex items-center gap-3">
           <Link
-            href="/admin/sync"
+            href="/futuroadmin/sync"
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-bold uppercase rounded-lg transition-colors"
           >
             <Bot className="w-4 h-4 text-emerald-600" />
             <span>Sincronizar Sheets / Ollama</span>
           </Link>
           <Link
-            href="/admin/novo"
+            href="/futuroadmin/novo"
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-extrabold uppercase rounded-lg transition-colors shadow-sm"
           >
             <Plus className="w-4 h-4" />
@@ -336,7 +336,7 @@ export default function AdminPage() {
                         <ExternalLink className="w-4 h-4" />
                       </Link>
                       <Link
-                        href={`/admin/editar/${article.id}`}
+                        href={`/futuroadmin/editar/${article.id}`}
                         className="inline-block p-1.5 text-neutral-400 hover:text-emerald-600 rounded"
                         title="Editar"
                       >

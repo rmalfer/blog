@@ -1,0 +1,22 @@
+﻿# Ambientes virtuais
+.venv/
+venv/
+ENV/
+
+# Credenciais, configurações com dados sensíveis e tokens
+config/client_secret.json
+config/settings.yaml
+data/token.json
+*.env
+.env
+
+# Logs
+logs/
+*.log
+
+# Caches e arquivos temporários do Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.pytest_cache/

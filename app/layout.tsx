@@ -6,7 +6,7 @@ import Script from 'next/script';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://umfuturoproximo.vercel.app';
 const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
-const gaId = process.env.NEXT_PUBLIC_GA_ID;
+const gaId = process.env.NEXT_PUBLIC_GA_ID || 'G-KX51DSGRWD';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

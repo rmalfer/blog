@@ -17,26 +17,30 @@ def find_python() -> str:
 
 
 def create_scheduled_task(
-    task_name: str = 'BlogAutoPost',
+    task_name: str = 'FuturoProximoSync',
     time: str = '09:00',
     python_path: str = None,
     script_path: str = None
 ):
     """
-    Cria uma tarefa no Windows Task Scheduler.
+    Cria uma tarefa no Windows Task Scheduler para ingestão diária de notícias.
     
     Args:
         task_name: Nome da tarefa no Task Scheduler
         time: Horário de execução (HH:MM)
-        python_path: Caminho do executável Python
-        script_path: Caminho do script main.py
+        python_path: Caminho do executável Python (opcional)
+        script_path: Caminho do script de execução (padrão: main_supabase.py)
     """
     project_dir = Path(__file__).resolve().parent
-    python_exe = python_path or find_python()
-    main_script = script_path or str(project_dir / 'main.py')
+    bat_file = project_dir / 'run_daily.bat'
     
-    # Comando que será executado
-    command = f'"{python_exe}" "{main_script}" run'
+    # Se existir o run_daily.bat, usa ele por garantir diretório e codificação corretos
+    if bat_file.exists() and not script_path:
+        command = f'cmd.exe /c "{bat_file}"'
+    else:
+        python_exe = python_path or find_python()
+        main_script = script_path or str(project_dir / 'main_supabase.py')
+        command = f'"{python_exe}" "{main_script}" run'
     
     print(f"📋 Configurando tarefa agendada no Windows Task Scheduler")
     print(f"   Nome da tarefa:  {task_name}")
@@ -80,7 +84,7 @@ def create_scheduled_task(
             print(f"   python setup_scheduler.py")
 
 
-def remove_scheduled_task(task_name: str = 'BlogAutoPost'):
+def remove_scheduled_task(task_name: str = 'FuturoProximoSync'):
     """Remove a tarefa agendada."""
     result = subprocess.run(
         ['schtasks', '/delete', '/tn', task_name, '/f'],
@@ -93,7 +97,7 @@ def remove_scheduled_task(task_name: str = 'BlogAutoPost'):
         print(f"❌ Erro ao remover tarefa: {result.stderr}")
 
 
-def check_scheduled_task(task_name: str = 'BlogAutoPost'):
+def check_scheduled_task(task_name: str = 'FuturoProximoSync'):
     """Verifica status da tarefa agendada."""
     result = subprocess.run(
         ['schtasks', '/query', '/tn', task_name, '/v', '/fo', 'list'],
@@ -110,13 +114,13 @@ def check_scheduled_task(task_name: str = 'BlogAutoPost'):
 if __name__ == '__main__':
     import argparse
     
-    parser = argparse.ArgumentParser(description='Gerencia agendamento do Blog Auto Post')
+    parser = argparse.ArgumentParser(description='Gerencia agendamento do Portal Um Futuro Próximo')
     parser.add_argument('action', choices=['create', 'remove', 'check'],
                        default='create', nargs='?',
                        help='Ação: create, remove ou check')
     parser.add_argument('--time', default='09:00',
                        help='Horário de execução (HH:MM)')
-    parser.add_argument('--name', default='BlogAutoPost',
+    parser.add_argument('--name', default='FuturoProximoSync',
                        help='Nome da tarefa')
     
     args = parser.parse_args()

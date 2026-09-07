@@ -141,6 +141,48 @@ class SheetsReader:
         except Exception as e:
             logger.error("Erro ao ler planilha: %s", e)
             raise
+
+    def get_all_news(self) -> list[dict]:
+        """
+        Lê todas as notícias da planilha, independentemente do status.
+        
+        Returns:
+            Lista de dicionários com dados de todas as notícias
+        """
+        try:
+            range_name = f"{self.sheet_name}!A:F"
+            result = self.sheets.values().get(
+                spreadsheetId=self.spreadsheet_id,
+                range=range_name,
+                valueRenderOption='FORMATTED_VALUE'
+            ).execute()
+            
+            values = result.get('values', [])
+            if not values:
+                return []
+            
+            all_news = []
+            for row_idx, row in enumerate(values[1:], start=2):
+                while len(row) < 6:
+                    row.append('')
+                
+                title = row[1].strip() if row[1] else ''
+                if not title:
+                    continue
+                
+                all_news.append({
+                    'row_number': row_idx,
+                    'date': row[0].strip() if row[0] else '',
+                    'title': title,
+                    'content': row[2].strip() if row[2] else '',
+                    'link': row[3].strip() if row[3] else '',
+                    'status': row[4].strip() if row[4] else '',
+                    'url': row[5].strip() if row[5] else '',
+                })
+            return all_news
+        except Exception as e:
+            logger.error("Erro ao ler todas as notícias da planilha: %s", e)
+            return []
     
     def mark_as_published(self, row_number: int, post_url: str = '') -> bool:
         """

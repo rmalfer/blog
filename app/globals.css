@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    @apply bg-white text-neutral-900 antialiased selection:bg-emerald-400 selection:text-black;
+  }
+}
+
+/* Custom Editorial Article Styles */
+.article-body {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #1a1a1a;
+}
+
+.article-body p {
+  margin-bottom: 1.5rem;
+}
+
+.article-body h2 {
+  font-size: 1.65rem;
+  font-weight: 900;
+  color: #000;
+  margin-top: 2.25rem;
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+
+.article-body h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #111;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.article-body strong {
+  font-weight: 700;
+  color: #000;
+}
+
+.article-body em {
+  font-style: italic;
+  color: #262626;
+}
+
+.article-body blockquote {
+  border-left: 4px solid #00D66C;
+  padding-left: 1.25rem;
+  margin: 1.75rem 0;
+  font-style: italic;
+  color: #404040;
+  background-color: #f9fbf9;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.article-body ul, .article-body ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.article-body ul {
+  list-style-type: disc;
+}
+
+.article-body ol {
+  list-style-type: decimal;
+}
+
+.article-body li {
+  margin-bottom: 0.5rem;
+}
+
+.article-body a {
+  color: #00AB55;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+.article-body a:hover {
+  color: #008744;
+}

@@ -1,4 +1,4 @@
-﻿# Ambientes virtuais
+# Ambientes virtuais
 .venv/
 venv/
 ENV/
@@ -20,3 +20,13 @@ __pycache__/
 *.class
 *.so
 .pytest_cache/
+
+# Next.js & Node
+node_modules/
+.next/
+out/
+.env*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+

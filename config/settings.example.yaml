@@ -1,47 +1,30 @@
-﻿google_sheets:
-  spreadsheet_id: "SUA_SPREADSHEET_ID_AQUI"
-  sheet_name: "Sheet1"
-  range: "A:E"  # Data de Inclusão, Título, Matéria, Link, Status
-  columns:
-    date: 0        # A - Data de Inclusão
-    title: 1       # B - Título
-    content: 2     # C - Matéria
-    link: 3        # D - Link
-    status: 4      # E - Status (adicionada pelo sistema)
+# Configurações do Portal 'Um Futuro Próximo'
+portal:
+  name: "Um Futuro Próximo"
+  base_url: "https://umfuturoproximo.vercel.app"
+  author_name: "Riccardo Malfer"
+  author_role: "Editor & Especialista em IA"
 
-blogger:
-  blog_id: "SEU_BLOG_ID_AQUI"
-  publish_as_draft: false
-  max_posts_per_run: 5
-  default_labels:
-    - "Inteligência Artificial"
-    - "Tecnologia"
+supabase:
+  url: "https://jupjgvmhjybsztjevsap.supabase.co"
+  publishable_key: "sb_publishable_uDVjtCRetSOA0nBWlscWjA_uNfsiB-j"
+  service_role_key: ""  # Opcional para backend
+
+sources:
+  - id: "sheet_ia"
+    category_name: "Inteligência Artificial"
+    category_slug: "inteligencia-artificial"
+    spreadsheet_id: "1TpSIKlRNKmmGJJmR87q4MH3bIJFTj76lAZCs1iqtloA"
+    sheet_name: "Página1"
+
+  - id: "sheet_robos"
+    category_name: "Robôs Humanoides"
+    category_slug: "robos-humanoides"
+    spreadsheet_id: "1RAiO7u8r9IpOW6B4-5sI5rx2aM5TcN9PrlacRjynD5Y"
+    sheet_name: "Página1"
 
 ollama:
   base_url: "http://localhost:11434"
   model: "gemma4:12b"
   temperature: 0.7
   num_predict: 2048
-  system_prompt: |
-    Você é um jornalista de tecnologia especializado em Inteligência Artificial.
-    Escreva um artigo detalhado e envolvente em português do Brasil sobre o tema fornecido.
-    O texto deve ter entre 4-6 parágrafos, ser informativo e acessível ao público geral.
-    Use um tom profissional mas acessível.
-    NÃO inclua título no texto, apenas o corpo do artigo.
-    Formate o texto em HTML com tags <p> para parágrafos, <strong> para destaques e <em> para ênfase.
-
-scheduler:
-  time: "09:00"
-  timezone: "America/Sao_Paulo"
-
-logging:
-  level: "INFO"
-  directory: "logs"
-
-# Configuração de publicação alternativa via E-mail secreto (Mail-to-Blogger)
-blogger_email:
-  smtp_server: "smtp.gmail.com"
-  smtp_port: 587
-  sender_email: "seu_email@gmail.com"
-  sender_password: "sua_senha_de_app_aqui"           # Senha de App do Google (16 letras)
-  blogger_secret_email: "seu_blogger_secreto@blogger.com"

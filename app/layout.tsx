@@ -127,8 +127,8 @@ export default function RootLayout({
             />
           </noscript>
         )}
-        {/* Google Analytics 4 Script */}
-        {gaId && !gaId.includes('0000000000') && (
+        {/* Google Analytics 4 (gerenciado via GTM; fallback caso GTM não esteja ativo) */}
+        {!gtmId && gaId && !gaId.includes('0000000000') && (
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}

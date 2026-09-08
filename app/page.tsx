@@ -150,6 +150,9 @@ export default async function HomePage() {
         </div>
       </div>
 
+      {/* Anúncio AdSense Horizontal (Antes de Série Especial) */}
+      <AdSenseSlot slotId="mid_banner_special" format="horizontal" label="PUBLICIDADE" />
+
       {/* Especial: Vitrine de Robôs Humanoides */}
       {humanoidArticles.length > 0 && (
         <section className="bg-neutral-950 text-white rounded-2xl p-8 my-16 relative overflow-hidden">

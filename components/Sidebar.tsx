@@ -97,6 +97,9 @@ export function Sidebar({ trendingArticles = [] }: SidebarProps) {
           ))}
         </div>
       </div>
+
+      {/* Anúncio AdSense Sidebar Inferior (Abaixo de Tópicos do Futuro) */}
+      <AdSenseSlot slotId="sidebar_bottom" format="rectangle" label="PUBLICIDADE" />
     </aside>
   );
 }

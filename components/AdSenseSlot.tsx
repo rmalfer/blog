@@ -10,13 +10,14 @@ interface AdSenseSlotProps {
 }
 
 export function AdSenseSlot({
-  slotId = '0000000000',
+  slotId = '',
   format = 'auto',
   className = '',
   label = 'PUBLICIDADE',
 }: AdSenseSlotProps) {
-  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-9812172654623216';
   const isConfigured = clientId && !clientId.includes('0000000000');
+  const hasValidSlotId = slotId && /^\d+$/.test(slotId);
 
   useEffect(() => {
     if (isConfigured && typeof window !== 'undefined') {
@@ -33,13 +34,13 @@ export function AdSenseSlot({
       <div className="text-[10px] tracking-wider uppercase text-neutral-400 font-semibold mb-1">
         {label}
       </div>
-      <div className="min-h-[100px] sm:min-h-[140px] flex items-center justify-center bg-neutral-50 border border-dashed border-neutral-200 rounded-lg p-4 transition-all">
+      <div className="min-h-[100px] sm:min-h-[140px] flex items-center justify-center bg-neutral-50/50 border border-dashed border-neutral-200/80 rounded-lg p-2 transition-all overflow-hidden">
         {isConfigured ? (
           <ins
             className="adsbygoogle"
             style={{ display: 'block' }}
             data-ad-client={clientId}
-            data-ad-slot={slotId}
+            {...(hasValidSlotId ? { 'data-ad-slot': slotId } : {})}
             data-ad-format={format}
             data-full-width-responsive="true"
           />

@@ -5,7 +5,7 @@ import { Footer } from '@/components/Footer';
 import Script from 'next/script';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://umfuturoproximo.vercel.app';
-const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-9812172654623216';
 const gaId = process.env.NEXT_PUBLIC_GA_ID || 'G-KX51DSGRWD';
 const gtmId = process.env.NEXT_PUBLIC_GTM_ID || 'GTM-56FTJNTJ';
 
@@ -94,13 +94,16 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
         />
 
-        {/* Google AdSense Script */}
+        {/* Google AdSense Script & Verification */}
         {adsenseId && !adsenseId.includes('0000000000') && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
-            crossOrigin="anonymous"
-          />
+          <>
+            <meta name="google-adsense-account" content={adsenseId} />
+            <script
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
+              crossOrigin="anonymous"
+            />
+          </>
         )}
         {/* Google Tag Manager Script */}
         {gtmId && !gtmId.includes('00000000') && (

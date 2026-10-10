@@ -73,7 +73,7 @@ export function Header() {
                 Um Futuro<span className="text-emerald-500">.</span>Próximo
               </span>
               <span className="text-[10px] tracking-widest uppercase font-bold text-neutral-500 mt-1">
-                Inteligência Artificial & Robótica • Riccardo Malfer
+                Inteligência Artificial & Robótica
               </span>
             </div>
           </Link>

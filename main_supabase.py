@@ -23,7 +23,7 @@ if sys.platform == 'win32':
     except Exception:
         pass
 
-from src.pipeline_supabase import run_supabase_pipeline, load_settings, sync_supabase_dates
+from src.pipeline_supabase import run_supabase_pipeline, load_settings, sync_supabase_dates, reprocess_published_articles
 from src.supabase_publisher import SupabasePublisher
 from src.ollama_client import OllamaClient
 from src.auth import get_credentials
@@ -66,6 +66,27 @@ def main():
     # Comando: sync-dates
     sync_parser = subparsers.add_parser('sync-dates', help='Atualiza as datas dos artigos no Supabase a partir das planilhas')
     sync_parser.add_argument(
+        '--config',
+        type=str,
+        default=None,
+        help='Caminho alternativo para settings.yaml'
+    )
+
+    # Comando: reprocess
+    reproc_parser = subparsers.add_parser('reprocess', help='Reprocessa com Ollama as notícias já publicadas que estão resumidas, mantendo URL e data/hora')
+    reproc_parser.add_argument(
+        '--min-words',
+        type=int,
+        default=250,
+        help='Reprocessar artigos com menos de X palavras (padrão: 250)'
+    )
+    reproc_parser.add_argument(
+        '--workers',
+        type=int,
+        default=2,
+        help='Número de workers paralelos para geração (padrão: 2)'
+    )
+    reproc_parser.add_argument(
         '--config',
         type=str,
         default=None,
@@ -138,6 +159,15 @@ def main():
     if args.command == 'sync-dates':
         print("\n📅 INICIANDO SINCRONIZAÇÃO DE DATAS COM AS PLANILHAS...\n")
         sync_supabase_dates(settings_path=getattr(args, 'config', None))
+        return
+
+    if args.command == 'reprocess':
+        print("\n♻️ INICIANDO REPROCESSAMENTO DAS NOTÍCIAS PUBLICADAS COM OLLAMA...\n")
+        reprocess_published_articles(
+            settings_path=getattr(args, 'config', None),
+            min_words=getattr(args, 'min_words', 250),
+            workers=getattr(args, 'workers', 2)
+        )
         return
 
     if args.command == 'run':

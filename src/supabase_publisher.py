@@ -72,12 +72,13 @@ class SupabasePublisher:
             logger.error("❌ Falha na conexão com Supabase: %s", e)
             return False
 
-    def publish_article(self, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def publish_article(self, data: Dict[str, Any], preserve_dates: bool = False) -> Optional[Dict[str, Any]]:
         """
         Publica ou atualiza um artigo no Supabase.
 
         Args:
             data: Dicionário contendo os dados do artigo
+            preserve_dates: Se True e o artigo já existir, mantém published_at e created_at originais do banco
 
         Returns:
             Dicionário com os dados do artigo criado/atualizado e a URL pública
@@ -89,11 +90,15 @@ class SupabasePublisher:
 
         slug = data.get('slug') or slugify(title)
         content = data.get('content', '').strip()
-        excerpt = data.get('excerpt', '')
+        excerpt = re.sub(r'<[^>]*>', '', (data.get('excerpt') or '')).strip()
         if not excerpt and content:
-            # Extrai os primeiros 200 caracteres de texto limpo para o excerpt
-            clean = re.sub(r'<[^>]*>', '', content).strip()
-            excerpt = clean[:220] + '...' if len(clean) > 220 else clean
+            # Extrai o primeiro parágrafo ou primeiros ~260 caracteres sem cortar palavras ao meio
+            clean = re.sub(r'<[^>]*>', ' ', content).strip()
+            clean = re.sub(r'\s+', ' ', clean)
+            if len(clean) > 260:
+                excerpt = clean[:260].rsplit(' ', 1)[0] + '...'
+            else:
+                excerpt = clean
 
         reading_time = data.get('reading_time') or calculate_reading_time(content)
 
@@ -121,14 +126,23 @@ class SupabasePublisher:
             payload['created_at'] = data['created_at']
 
         # 1. Verifica se o artigo com este slug já existe
-        check_url = f"{self.url}/rest/v1/articles?slug=eq.{slug}&select=id,slug"
+        check_url = f"{self.url}/rest/v1/articles?slug=eq.{slug}&select=id,slug,published_at,created_at,image_url,is_featured"
         try:
             check_res = requests.get(check_url, headers=self.headers, timeout=10)
             existing = check_res.json() if check_res.status_code == 200 else []
 
             if existing and len(existing) > 0:
                 # Atualiza o artigo existente (PATCH)
-                art_id = existing[0]['id']
+                curr = existing[0]
+                art_id = curr['id']
+                if preserve_dates:
+                    payload.pop('published_at', None)
+                    payload.pop('created_at', None)
+                if not payload.get('image_url') and curr.get('image_url'):
+                    payload['image_url'] = curr['image_url']
+                if curr.get('is_featured'):
+                    payload['is_featured'] = True
+
                 logger.info("Artigo '%s' já existe. Atualizando ID: %s", slug, art_id)
                 patch_url = f"{self.url}/rest/v1/articles?id=eq.{art_id}"
                 patch_res = requests.patch(patch_url, json=payload, headers=self.headers, timeout=15)

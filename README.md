@@ -95,6 +95,7 @@ python main_supabase.py run --dry-run
 | `python main_supabase.py run --max 10` | Executa o pipeline processando até 10 notícias por planilha. |
 | `python main_supabase.py run --dry-run` | Modo simulação: testa a leitura e geração sem gravar no banco. |
 | `python main_supabase.py sync-dates` | Sincroniza retroativamente as datas de publicação de todos os artigos no Supabase com base na coluna "Data de Inclusão". |
+| `python main_supabase.py reprocess` | Reprocessa com o Ollama todas as notícias já publicadas que estejam resumidas, preservando links (slugs) e datas/horas originais. |
 | `python main_supabase.py import-all` | Importa todas as linhas da planilha de uma só vez para o Supabase. |
 | `python main_supabase.py test` | Testa a conexão com Google Sheets, Ollama Local e Supabase API. |
 

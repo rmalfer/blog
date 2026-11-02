@@ -53,13 +53,17 @@ def fetch_source_article_text(url: str, timeout: int = 6, max_chars: int = 3000)
 
 
 def clean_generated_html(text: str) -> str:
-    """Remove blocos markdown e tags <h1> indesejadas da resposta do LLM."""
+    """Remove blocos markdown, tags <h1> indesejadas e corrige tags HTML finais malformadas."""
     if not text:
         return ''
     cleaned = text.strip()
     cleaned = re.sub(r'^```(?:html)?\s*', '', cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r'\s*```$', '', cleaned)
     cleaned = re.sub(r'<h1[^>]*>.*?</h1>', '', cleaned, flags=re.IGNORECASE | re.DOTALL).strip()
+    cleaned = cleaned.replace('</</p>', '</p>').replace('</>', '</p>')
+    cleaned = re.sub(r'</p?$', '</p>', cleaned)
+    if cleaned and not cleaned.endswith('</p>'):
+        cleaned += '</p>'
     return cleaned
 
 

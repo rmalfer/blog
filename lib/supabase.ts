@@ -23,6 +23,7 @@ export async function getPublishedArticles(options: {
   limit?: number;
   categorySlug?: string;
   offset?: number;
+  searchQuery?: string;
 } = {}): Promise<Article[]> {
   try {
     let query = supabase
@@ -33,6 +34,11 @@ export async function getPublishedArticles(options: {
 
     if (options.categorySlug) {
       query = query.eq('category_slug', options.categorySlug);
+    }
+
+    if (options.searchQuery && options.searchQuery.trim()) {
+      const q = options.searchQuery.trim().replace(/[%_]/g, '');
+      query = query.or(`title.ilike.%${q}%,excerpt.ilike.%${q}%,content.ilike.%${q}%`);
     }
 
     if (options.limit) {

@@ -113,7 +113,7 @@ def run_supabase_pipeline(
 
         logger.info("=" * 65)
         logger.info("INICIANDO PIPELINE: GOOGLE SHEETS -> OLLAMA -> SUPABASE")
-        logger.info("Portal: %s", settings.get('portal', {}).get('base_url', 'https://umfuturoproximo.vercel.app'))
+        logger.info("Portal: %s", settings.get('portal', {}).get('base_url', 'https://umfuturoproximo.com.br'))
         logger.info("Autor: %s", settings.get('portal', {}).get('author_name', 'Riccardo Malfer'))
         logger.info("Modo: %s", "DRY RUN (Simulação)" if dry_run else ("IMPORTAR TUDO" if import_all else "INCREMENTAL"))
         logger.info("=" * 65)
@@ -129,7 +129,7 @@ def run_supabase_pipeline(
         publisher = SupabasePublisher(
             url=supabase_config['url'],
             key=api_key,
-            portal_base_url=settings.get('portal', {}).get('base_url', 'https://umfuturoproximo.vercel.app')
+            portal_base_url=settings.get('portal', {}).get('base_url', 'https://umfuturoproximo.com.br')
         )
 
         # 3. Configura Ollama

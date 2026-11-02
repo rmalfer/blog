@@ -3,14 +3,18 @@ import './globals.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import Script from 'next/script';
+import { SITE_URL } from '@/lib/utils';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://umfuturoproximo.vercel.app';
+const siteUrl = SITE_URL;
 const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-9812172654623216';
 const gaId = process.env.NEXT_PUBLIC_GA_ID || 'G-KX51DSGRWD';
 const gtmId = process.env.NEXT_PUBLIC_GTM_ID || 'GTM-56FTJNTJ';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: siteUrl,
+  },
   title: {
     default: 'Um Futuro Próximo | Notícias de Inteligência Artificial e Robôs Humanoides',
     template: '%s | Um Futuro Próximo',
@@ -76,13 +80,20 @@ export default function RootLayout({
     '@type': 'NewsMediaOrganization',
     name: 'Um Futuro Próximo',
     url: siteUrl,
-    logo: `${siteUrl}/logo.png`,
+    logo: `${siteUrl}/icon.svg`,
     sameAs: ['https://twitter.com/rmalfer', 'https://linkedin.com/in/rmalfer'],
     founder: {
       '@type': 'Person',
       name: 'Riccardo Malfer',
       jobTitle: 'Editor-Chefe & Especialista em IA',
     },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'editorial',
+      email: 'contato@umfuturoproximo.com.br',
+      url: `${siteUrl}/contato`,
+    },
+    publishingPrinciples: `${siteUrl}/sobre`,
   };
 
   return (

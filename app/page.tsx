@@ -6,7 +6,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { AdSenseSlot } from '@/components/AdSenseSlot';
 import { Article } from '@/lib/types';
 import Link from 'next/link';
-import { Bot, Cpu, Sparkles, ArrowRight } from 'lucide-react';
+import { Bot, Cpu, Sparkles, ArrowRight, Search, X } from 'lucide-react';
 
 // Amostra editorial inicial caso a base de dados ainda esteja aguardando o primeiro sync
 const INITIAL_DEMO_ARTICLES: Article[] = [
@@ -94,15 +94,29 @@ const INITIAL_DEMO_ARTICLES: Article[] = [
 
 export const revalidate = 60; // Revalida a cada 60 segundos no Vercel
 
-export default async function HomePage() {
-  const dbArticles = await getPublishedArticles({ limit: 15 });
-  const articles = dbArticles.length > 0 ? dbArticles : INITIAL_DEMO_ARTICLES;
+interface HomePageProps {
+  searchParams?: Promise<{ q?: string }>;
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const resolvedParams = searchParams ? await searchParams : {};
+  const searchQuery = resolvedParams?.q?.trim() || '';
+
+  const dbArticles = await getPublishedArticles({
+    limit: searchQuery ? 24 : 18,
+    searchQuery: searchQuery || undefined,
+  });
+  const articles = searchQuery
+    ? dbArticles
+    : dbArticles.length > 0
+      ? dbArticles
+      : INITIAL_DEMO_ARTICLES;
 
   const featured = articles.filter((a) => a.is_featured);
   const heroArticles = featured.length >= 4 ? featured : articles.slice(0, 4);
-  const feedArticles = articles.slice(heroArticles.length);
+  const feedArticles = searchQuery ? articles : articles.slice(heroArticles.length);
   const trendingArticles = await getTrendingArticles(5);
-  const trending = trendingArticles.length > 0 ? trendingArticles : articles.slice(0, 5);
+  const trending = trendingArticles.length > 0 ? trendingArticles : INITIAL_DEMO_ARTICLES.slice(0, 4);
 
   // Destaques de Robôs Humanoides
   const humanoidArticles = articles.filter(
@@ -111,8 +125,33 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-12">
-      {/* Hero Section Estilo TechCrunch */}
-      <HeroStory articles={heroArticles} />
+      {/* Se estiver em modo busca (?q=...), exibe cabeçalho de resultados; caso contrário, Hero */}
+      {searchQuery ? (
+        <div className="bg-neutral-950 text-white rounded-2xl p-8 border-b-4 border-emerald-500 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 bg-emerald-500 text-black text-xs font-black uppercase tracking-wider px-3 py-1 rounded mb-2">
+              <Search className="w-3.5 h-3.5" />
+              <span>Pesquisa no Portal</span>
+            </div>
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
+              Resultados para &ldquo;{searchQuery}&rdquo;
+            </h1>
+            <p className="text-neutral-400 text-sm mt-1">
+              {articles.length}{' '}
+              {articles.length === 1 ? 'reportagem encontrada' : 'reportagens encontradas'} no acervo editorial
+            </p>
+          </div>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider bg-neutral-800 hover:bg-neutral-700 text-white px-4 py-2.5 rounded-lg transition-colors self-start sm:self-auto"
+          >
+            <X className="w-4 h-4 text-emerald-400" />
+            <span>Limpar filtro</span>
+          </Link>
+        </div>
+      ) : (
+        <HeroStory articles={heroArticles} />
+      )}
 
       {/* Leaderboard AdSense Top Banner */}
       <AdSenseSlot slotId="728x90_top" format="horizontal" label="PUBLICIDADE" />
@@ -124,15 +163,30 @@ export default async function HomePage() {
           <div className="flex items-center justify-between border-b-2 border-black pb-3">
             <h2 className="text-xl font-black uppercase tracking-tight text-black flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-emerald-500" />
-              Últimas Notícias & Análises
+              {searchQuery ? `Artigos sobre "${searchQuery}"` : 'Últimas Notícias & Análises'}
             </h2>
             <span className="text-xs font-semibold text-neutral-400">
-              Atualizado em tempo real
+              {searchQuery ? `${articles.length} itens` : 'Atualizado em tempo real'}
             </span>
           </div>
 
           <div className="divide-y divide-neutral-200">
-            {feedArticles.length > 0 ? (
+            {searchQuery && articles.length === 0 ? (
+              <div className="py-12 text-center bg-neutral-50 rounded-xl border border-neutral-200 px-6">
+                <p className="text-base font-bold text-neutral-800">
+                  Nenhuma notícia encontrada para &ldquo;{searchQuery}&rdquo;.
+                </p>
+                <p className="text-sm text-neutral-500 mt-1 mb-4">
+                  Tente pesquisar por termos como Inteligência Artificial, Robôs Humanoides, OpenAI, Anthropic ou Tesla Optimus.
+                </p>
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-2 bg-black text-white text-xs font-bold uppercase tracking-wider px-4 py-2.5 rounded hover:bg-emerald-600 transition-colors"
+                >
+                  Ver todas as notícias recentes
+                </Link>
+              </div>
+            ) : feedArticles.length > 0 ? (
               feedArticles.map((article) => (
                 <ArticleCard key={article.id || article.slug} article={article} />
               ))

@@ -2,6 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPublishedArticles, getCategories, getTrendingArticles } from '@/lib/supabase';
+import { SITE_URL } from '@/lib/utils';
 import { ArticleCard } from '@/components/ArticleCard';
 import { Sidebar } from '@/components/Sidebar';
 import { AdSenseSlot } from '@/components/AdSenseSlot';
@@ -24,12 +25,23 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   const category = categories.find((c) => c.slug === slug);
 
   if (!category) {
-    return { title: 'Categoria | Um Futuro Próximo' };
+    return { title: 'Categoria' };
   }
 
+  const canonicalUrl = `${SITE_URL}/categoria/${category.slug}`;
+
   return {
-    title: `${category.name} | Notícias e Análises`,
+    title: `${category.name} — Notícias e Análises`,
     description: category.description || `Notícias mais recentes sobre ${category.name} por Riccardo Malfer.`,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: `${category.name} | Um Futuro Próximo`,
+      description: category.description || `Notícias mais recentes sobre ${category.name} por Riccardo Malfer.`,
+      url: canonicalUrl,
+      type: 'website',
+    },
   };
 }
 
@@ -66,8 +78,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         )}
       </div>
 
-      {/* Top Banner AdSense */}
-      <AdSenseSlot slotId="cat_top_banner" format="horizontal" />
+      {/* Top Banner AdSense (somente quando há conteúdo publicado) */}
+      {articles.length > 0 && <AdSenseSlot slotId="cat_top_banner" format="horizontal" />}
 
       {/* Grid: 8 cols feed + 4 cols sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">

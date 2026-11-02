@@ -35,7 +35,7 @@ def calculate_reading_time(text: str) -> str:
 class SupabasePublisher:
     """Cliente para publicação de matérias no Supabase."""
 
-    def __init__(self, url: str, key: str, portal_base_url: str = "https://umfuturoproximo.vercel.app"):
+    def __init__(self, url: str, key: str, portal_base_url: str = "https://umfuturoproximo.com.br"):
         """
         Inicializa o publicador do Supabase.
 

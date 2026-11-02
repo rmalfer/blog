@@ -53,6 +53,16 @@ export function Header() {
           </div>
 
           <div className="flex items-center gap-4 text-[11px] font-medium shrink-0">
+            <Link href="/sobre" className="hidden md:inline-block text-neutral-400 hover:text-emerald-400 transition-colors">
+              Sobre
+            </Link>
+            <Link href="/contato" className="hidden md:inline-block text-neutral-400 hover:text-emerald-400 transition-colors">
+              Contato
+            </Link>
+            <Link href="/privacidade" className="hidden md:inline-block text-neutral-400 hover:text-emerald-400 transition-colors">
+              Privacidade
+            </Link>
+            <span className="hidden md:inline-block text-neutral-700">|</span>
             <span className="hidden md:inline-block text-neutral-400">
               Por Riccardo Malfer
             </span>

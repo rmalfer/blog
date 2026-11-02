@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getArticleBySlug, getRelatedArticles, getTrendingArticles } from '@/lib/supabase';
-import { formatDate, formatDateTime } from '@/lib/utils';
+import { formatDate, formatDateTime, SITE_URL } from '@/lib/utils';
 import { ShareButtons } from '@/components/ShareButtons';
 import { AdSenseSlot } from '@/components/AdSenseSlot';
 import { Sidebar } from '@/components/Sidebar';
@@ -14,7 +14,7 @@ interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://umfuturoproximo.vercel.app';
+const siteUrl = SITE_URL;
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -22,11 +22,11 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 
   if (!article) {
     return {
-      title: 'Notícia não encontrada | Um Futuro Próximo',
+      title: 'Notícia não encontrada',
     };
   }
 
-  const title = `${article.title} | Um Futuro Próximo`;
+  const title = article.title;
   const description = article.excerpt || article.title;
   const canonicalUrl = `${siteUrl}/noticia/${article.slug}`;
 
@@ -81,14 +81,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       '@type': 'Person',
       name: article.author_name || 'Riccardo Malfer',
       jobTitle: 'Editor & Especialista em IA',
-      url: siteUrl,
+      url: `${siteUrl}/sobre`,
     },
     publisher: {
       '@type': 'NewsMediaOrganization',
       name: 'Um Futuro Próximo',
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}/logo.png`,
+        url: `${siteUrl}/icon.svg`,
       },
     },
     mainEntityOfPage: {

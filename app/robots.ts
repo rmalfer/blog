@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
+import { SITE_URL } from '@/lib/utils';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://umfuturoproximo.vercel.app';
+const siteUrl = SITE_URL;
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,6 +10,10 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: '/',
         disallow: ['/futuroadmin/', '/admin/', '/api/'],
+      },
+      {
+        userAgent: 'Mediapartners-Google',
+        allow: '/',
       },
       {
         userAgent: 'Googlebot',

@@ -1,6 +1,11 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL && !process.env.NEXT_PUBLIC_SITE_URL.includes('vercel.app')
+    ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '')
+    : 'https://umfuturoproximo.com.br';
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

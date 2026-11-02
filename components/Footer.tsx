@@ -107,8 +107,33 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/sitemap.xml" className="text-neutral-400 hover:text-white transition-colors">
-                  Mapa do Site (XML Sitemap)
+                <Link href="/sobre" className="text-neutral-400 hover:text-emerald-400 transition-colors flex items-center justify-between">
+                  <span>Sobre Nós & Expediente Editorial</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-neutral-600" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/contato" className="text-neutral-400 hover:text-emerald-400 transition-colors flex items-center justify-between">
+                  <span>Contato & Redação</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-neutral-600" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacidade" className="text-neutral-400 hover:text-emerald-400 transition-colors flex items-center justify-between">
+                  <span>Política de Privacidade e Cookies (LGPD)</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-neutral-600" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/termos" className="text-neutral-400 hover:text-emerald-400 transition-colors flex items-center justify-between">
+                  <span>Termos e Condições de Uso</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-neutral-600" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/sitemap.xml" className="text-neutral-400 hover:text-white transition-colors flex items-center justify-between">
+                  <span>Mapa do Site (XML Sitemap)</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-neutral-600" />
                 </Link>
               </li>
             </ul>

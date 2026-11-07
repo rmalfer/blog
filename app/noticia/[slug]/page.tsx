@@ -2,19 +2,42 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getArticleBySlug, getRelatedArticles, getTrendingArticles } from '@/lib/supabase';
-import { formatDate, formatDateTime, SITE_URL } from '@/lib/utils';
+import {
+  getArticleBySlug,
+  getRelatedArticles,
+  getTrendingArticles,
+  getPublishedArticles,
+} from '@/lib/supabase';
+import { formatDate, SITE_URL } from '@/lib/utils';
+import {
+  formatLeadSubtitle,
+  generateSeoTitle,
+  generateImageAlt,
+  extractArticleHighlights,
+  enrichArticleContentWithInternalLinks,
+  stripHtml,
+} from '@/lib/seo';
 import { ShareButtons } from '@/components/ShareButtons';
 import { AdSenseSlot } from '@/components/AdSenseSlot';
 import { Sidebar } from '@/components/Sidebar';
 import { ArticleCard } from '@/components/ArticleCard';
-import { Clock, User, ExternalLink, Sparkles, ChevronRight, Bookmark } from 'lucide-react';
+import { Clock, ExternalLink, Sparkles, ChevronRight } from 'lucide-react';
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
 
 const siteUrl = SITE_URL;
+
+function toValidIso8601(dateStr?: string | null): string {
+  if (!dateStr) return new Date().toISOString();
+  try {
+    const d = new Date(dateStr);
+    return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
+  } catch {
+    return new Date().toISOString();
+  }
+}
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -26,30 +49,44 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     };
   }
 
-  const title = article.title;
-  const description = article.excerpt || article.title;
+  // Title Tag enxuta (~50-62 chars) com palavra-chave primária à esquerda;
+  // o RootLayout aplica o template "%s | Um Futuro Próximo"
+  const seoTitle = generateSeoTitle(article);
+  // Linha fina concisa (120-160 chars) para Meta Description e Google Discover
+  const description = formatLeadSubtitle(article);
+  const imageAlt = generateImageAlt(article);
   const canonicalUrl = `${siteUrl}/noticia/${article.slug}`;
+  const publishedIso = toValidIso8601(article.published_at);
+  const modifiedIso = toValidIso8601(article.updated_at || article.published_at);
 
   return {
-    title,
+    title: seoTitle,
     description,
-    authors: [{ name: article.author_name || 'Riccardo Malfer' }],
+    authors: [{ name: article.author_name || 'Riccardo Malfer', url: `${siteUrl}/sobre` }],
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title,
+      title: article.title,
       description,
       url: canonicalUrl,
       type: 'article',
-      publishedTime: article.published_at,
-      modifiedTime: article.updated_at,
+      publishedTime: publishedIso,
+      modifiedTime: modifiedIso,
+      section: article.category_name,
       authors: [article.author_name || 'Riccardo Malfer'],
-      images: article.image_url ? [{ url: article.image_url }] : [],
+      images: article.image_url
+        ? [
+            {
+              url: article.image_url,
+              alt: imageAlt,
+            },
+          ]
+        : [],
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: seoTitle,
       description,
       images: article.image_url ? [article.image_url] : [],
     },
@@ -66,26 +103,50 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
-  const related = await getRelatedArticles(article.category_slug, article.slug, 3);
-  const trending = await getTrendingArticles(5);
+  const [related, trending, recentPool] = await Promise.all([
+    getRelatedArticles(article.category_slug, article.slug, 3),
+    getTrendingArticles(5),
+    getPublishedArticles({ limit: 40 }),
+  ]);
 
-  const jsonLd = {
+  const leadSubtitle = formatLeadSubtitle(article);
+  const seoTitle = generateSeoTitle(article);
+  const imageAlt = generateImageAlt(article);
+  const highlights = extractArticleHighlights(article);
+  const enrichedHtmlContent = enrichArticleContentWithInternalLinks(
+    article.content,
+    article,
+    recentPool
+  );
+
+  const wordCount = stripHtml(article.content).split(/\s+/).filter(Boolean).length;
+  const publishedIso = toValidIso8601(article.published_at);
+  const modifiedIso = toValidIso8601(article.updated_at || article.published_at);
+  const canonicalUrl = `${siteUrl}/noticia/${article.slug}`;
+
+  const jsonLdArticle = {
     '@context': 'https://schema.org',
-    '@type': 'NewsArticle',
+    '@type': ['NewsArticle', 'TechArticle'],
     headline: article.title,
-    description: article.excerpt,
-    image: article.image_url ? [article.image_url] : [],
-    datePublished: article.published_at,
-    dateModified: article.updated_at || article.published_at,
+    alternativeHeadline: seoTitle,
+    description: leadSubtitle,
+    image: article.image_url ? [article.image_url] : [`${siteUrl}/icon.svg`],
+    datePublished: publishedIso,
+    dateModified: modifiedIso,
+    articleSection: article.category_name,
+    inLanguage: 'pt-BR',
+    isAccessibleForFree: true,
+    wordCount,
     author: {
       '@type': 'Person',
       name: article.author_name || 'Riccardo Malfer',
-      jobTitle: 'Editor & Especialista em IA',
+      jobTitle: article.author_role || 'Editor & Especialista em IA',
       url: `${siteUrl}/sobre`,
     },
     publisher: {
       '@type': 'NewsMediaOrganization',
       name: 'Um Futuro Próximo',
+      url: siteUrl,
       logo: {
         '@type': 'ImageObject',
         url: `${siteUrl}/icon.svg`,
@@ -93,25 +154,61 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${siteUrl}/noticia/${article.slug}`,
+      '@id': canonicalUrl,
     },
+  };
+
+  const jsonLdBreadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Início',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: article.category_name,
+        item: `${siteUrl}/categoria/${article.category_slug}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: seoTitle,
+        item: canonicalUrl,
+      },
+    ],
   };
 
   return (
     <>
-      {/* Schema.org NewsArticle JSON-LD */}
+      {/* Schema.org NewsArticle / TechArticle JSON-LD */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdArticle) }}
+      />
+      {/* Schema.org BreadcrumbList JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
       />
 
       {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-semibold text-neutral-500 mb-6 uppercase tracking-wider overflow-x-auto whitespace-nowrap py-1">
+      <nav
+        aria-label="Breadcrumb"
+        className="flex items-center gap-2 text-xs font-semibold text-neutral-500 mb-6 uppercase tracking-wider overflow-x-auto whitespace-nowrap py-1"
+      >
         <Link href="/" className="hover:text-black">
           Início
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-        <Link href={`/categoria/${article.category_slug}`} className="hover:text-emerald-600 text-emerald-600">
+        <Link
+          href={`/categoria/${article.category_slug}`}
+          className="hover:text-emerald-600 text-emerald-600"
+        >
           {article.category_name}
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
@@ -134,9 +231,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               {article.title}
             </h1>
 
-            {article.excerpt && (
-              <p className="text-lg sm:text-xl text-neutral-600 font-medium leading-relaxed">
-                {article.excerpt}
+            {leadSubtitle && (
+              <p className="lead subtitle text-lg sm:text-xl text-neutral-600 font-medium leading-relaxed">
+                {leadSubtitle}
               </p>
             )}
 
@@ -148,17 +245,19 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 </div>
                 <div>
                   <div className="text-sm font-black text-black flex items-center gap-1.5">
-                    <span>{article.author_name}</span>
+                    <Link href="/sobre" className="hover:text-emerald-600 transition-colors">
+                      {article.author_name || 'Riccardo Malfer'}
+                    </Link>
                     <span className="text-[10px] bg-neutral-100 text-neutral-600 px-1.5 py-0.5 rounded font-bold uppercase">
                       Autor
                     </span>
                   </div>
                   <div className="text-xs text-neutral-500 flex items-center gap-2 mt-0.5">
-                    <span>Publicado em {formatDate(article.published_at)}</span>
+                    <time dateTime={publishedIso}>Publicado em {formatDate(article.published_at)}</time>
                     <span>•</span>
                     <span className="flex items-center gap-1">
                       <Clock className="w-3 h-3 text-neutral-400" />
-                      {article.reading_time || '3 min'}
+                      {article.reading_time || '3 min de leitura'}
                     </span>
                   </div>
                 </div>
@@ -175,32 +274,42 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-neutral-100 shadow-sm">
                 <img
                   src={article.image_url}
-                  alt={article.title}
+                  alt={imageAlt}
                   className="w-full h-full object-cover"
                   loading="eager"
                 />
               </div>
-              <figcaption className="text-xs text-neutral-400 italic text-center">
-                Imagem ilustrativa / Reprodução da fonte original
+              <figcaption className="text-xs text-neutral-500 italic text-center">
+                {imageAlt} — Reprodução / Divulgação
               </figcaption>
             </figure>
           )}
 
-          {/* Takeaways / Pontos Principais */}
-          <div className="bg-emerald-50/60 border-l-4 border-emerald-500 rounded-r-xl p-5 my-6">
-            <h3 className="text-xs font-black uppercase tracking-wider text-emerald-900 flex items-center gap-2 mb-2">
-              <Sparkles className="w-4 h-4 text-emerald-600" />
-              Destaques da Notícia
-            </h3>
-            <p className="text-sm text-emerald-950 font-medium leading-relaxed">
-              {article.excerpt || 'Análise completa dos impactos tecnológicos, contextuais e práticos desta notícia.'}
-            </p>
-          </div>
+          {/* Destaques da Notícia (Bullet Points para SEO / GEO / Featured Snippets) */}
+          {highlights.length > 0 && (
+            <aside
+              aria-label="Destaques da Notícia"
+              className="bg-emerald-50/60 border-l-4 border-emerald-500 rounded-r-xl p-5 sm:p-6 my-6"
+            >
+              <h2 className="text-xs font-black uppercase tracking-wider text-emerald-900 flex items-center gap-2 mb-3">
+                <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Destaques da Notícia</span>
+              </h2>
+              <ul className="space-y-2.5 text-sm text-emerald-950 leading-relaxed list-disc pl-5 marker:text-emerald-600">
+                {highlights.map((item, idx) => (
+                  <li key={idx} className="pl-1">
+                    <strong className="font-extrabold text-black">{item.label}:</strong>{' '}
+                    <span className="font-medium text-emerald-950">{item.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          )}
 
           {/* Article HTML Content */}
           <div
             className="article-body"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: enrichedHtmlContent }}
           />
 
           {/* In-Article AdSense Banner */}
@@ -235,7 +344,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </div>
             <div className="space-y-2">
               <div className="flex items-center gap-3">
-                <h4 className="text-lg font-black text-white">Riccardo Malfer</h4>
+                <Link
+                  href="/sobre"
+                  className="text-lg font-black text-white hover:text-emerald-400 transition-colors"
+                >
+                  Riccardo Malfer
+                </Link>
                 <span className="text-[11px] bg-neutral-800 text-emerald-400 px-2 py-0.5 rounded font-bold uppercase">
                   Editor do Portal
                 </span>
@@ -249,9 +363,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           {/* Related Articles */}
           {related.length > 0 && (
             <section className="pt-8 border-t border-neutral-200 space-y-6">
-              <h3 className="text-lg font-black uppercase tracking-tight text-black">
+              <h2 className="text-lg font-black uppercase tracking-tight text-black">
                 Leia Também em {article.category_name}
-              </h3>
+              </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 {related.map((item) => (
                   <ArticleCard key={item.id || item.slug} article={item} layout="vertical" />

@@ -23,6 +23,41 @@ def slugify(text: str) -> str:
     return slug[:100]
 
 
+def condense_lead_excerpt(text: str, min_len: int = 120, max_len: int = 160) -> str:
+    """
+    Formata a Linha Fina (excerpt) e Meta Description entre 120 e 160 caracteres
+    em 1 a 2 frases curtas sem cortar palavras ao meio.
+    """
+    clean = re.sub(r'<[^>]*>', ' ', text or '').strip()
+    clean = re.sub(r'\s+', ' ', clean)
+    if not clean:
+        return ''
+    if len(clean) <= max_len:
+        return clean
+
+    sentences = re.split(r'(?<=[.!?])\s+', clean)
+    if sentences:
+        first = sentences[0].strip()
+        if 85 <= len(first) <= 165:
+            return first
+        if len(sentences) > 1:
+            two = f"{first} {sentences[1].strip()}"
+            if len(two) <= 165:
+                return two
+
+    sub = clean[:max_len]
+    for sep in ('; ', ', ', ' — '):
+        idx = sub.rfind(sep)
+        if idx >= min_len - 15:
+            return sub[:idx].strip().rstrip('.,;:') + '.'
+
+    last_space = sub.rfind(' ')
+    if last_space > 80:
+        cut = sub[:last_space].rstrip('.,;:-–— ')
+        return cut if cut.endswith('.') else cut + '.'
+    return clean[:max_len - 3].strip() + '...'
+
+
 def calculate_reading_time(text: str) -> str:
     """Calcula o tempo estimado de leitura em minutos."""
     # Remove tags HTML
@@ -90,15 +125,12 @@ class SupabasePublisher:
 
         slug = data.get('slug') or slugify(title)
         content = data.get('content', '').strip()
-        excerpt = re.sub(r'<[^>]*>', '', (data.get('excerpt') or '')).strip()
-        if not excerpt and content:
-            # Extrai o primeiro parágrafo ou primeiros ~260 caracteres sem cortar palavras ao meio
-            clean = re.sub(r'<[^>]*>', ' ', content).strip()
-            clean = re.sub(r'\s+', ' ', clean)
-            if len(clean) > 260:
-                excerpt = clean[:260].rsplit(' ', 1)[0] + '...'
-            else:
-                excerpt = clean
+        raw_excerpt = re.sub(r'<[^>]*>', '', (data.get('excerpt') or '')).strip()
+        if not raw_excerpt and content:
+            clean_body = re.sub(r'<ul[^>]*data-highlights[^>]*>[\s\S]*?</ul>', ' ', content, flags=re.I)
+            clean_body = re.sub(r'<[^>]*>', ' ', clean_body).strip()
+            raw_excerpt = re.sub(r'\s+', ' ', clean_body)
+        excerpt = condense_lead_excerpt(raw_excerpt, 120, 160)
 
         reading_time = data.get('reading_time') or calculate_reading_time(content)
 

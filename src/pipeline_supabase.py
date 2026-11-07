@@ -24,7 +24,7 @@ from .auth import get_credentials
 from .sheets_reader import SheetsReader
 from .ollama_client import OllamaClient
 from .image_fetcher import fetch_main_image
-from .supabase_publisher import SupabasePublisher, slugify
+from .supabase_publisher import SupabasePublisher, slugify, condense_lead_excerpt
 
 logger = logging.getLogger(__name__)
 
@@ -217,7 +217,7 @@ def run_supabase_pipeline(
                     article_data = {
                         'title': title,
                         'slug': existing_slug,
-                        'excerpt': raw_summary,
+                        'excerpt': condense_lead_excerpt(raw_summary, 120, 160),
                         'content': content,
                         'category_name': cat_name,
                         'category_slug': cat_slug,
@@ -545,11 +545,11 @@ def reprocess_published_articles(
         if '<p>' not in generated and '<div' not in generated:
             generated = "".join(f"<p>{p.strip()}</p>" for p in generated.split('\n\n') if p.strip())
 
-        clean_excerpt = re.sub(r'<[^>]*>', '', raw_summary).strip()
+        clean_excerpt = condense_lead_excerpt(raw_summary, 120, 160)
         if not clean_excerpt:
-            clean_body = re.sub(r'<[^>]*>', ' ', generated).strip()
-            clean_body = re.sub(r'\s+', ' ', clean_body)
-            clean_excerpt = clean_body[:260].rsplit(' ', 1)[0] + '...' if len(clean_body) > 260 else clean_body
+            clean_body = re.sub(r'<ul[^>]*data-highlights[^>]*>[\s\S]*?</ul>', ' ', generated, flags=re.I)
+            clean_body = re.sub(r'<[^>]*>', ' ', clean_body).strip()
+            clean_excerpt = condense_lead_excerpt(clean_body, 120, 160)
 
         reading_time = calculate_reading_time(generated)
         words_count = len(re.sub(r'<[^>]*>', ' ', generated).split())

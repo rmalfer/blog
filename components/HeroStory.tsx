@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Article } from '@/lib/types';
 import { formatDate } from '@/lib/utils';
+import { generateImageAlt, formatLeadSubtitle } from '@/lib/seo';
 import { Clock, User } from 'lucide-react';
 
 interface HeroStoryProps {
@@ -14,6 +15,7 @@ export function HeroStory({ articles }: HeroStoryProps) {
 
   const mainStory = articles[0];
   const secondaryStories = articles.slice(1, 4);
+  const mainLead = formatLeadSubtitle(mainStory);
 
   return (
     <section className="border-b border-neutral-200 pb-12 mb-12">
@@ -25,7 +27,7 @@ export function HeroStory({ articles }: HeroStoryProps) {
               {mainStory.image_url ? (
                 <img
                   src={mainStory.image_url}
-                  alt={mainStory.title}
+                  alt={generateImageAlt(mainStory)}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="eager"
                 />
@@ -44,9 +46,9 @@ export function HeroStory({ articles }: HeroStoryProps) {
                 {mainStory.title}
               </h1>
 
-              {mainStory.excerpt && (
+              {mainLead && (
                 <p className="text-neutral-600 text-base sm:text-lg leading-relaxed line-clamp-3">
-                  {mainStory.excerpt}
+                  {mainLead}
                 </p>
               )}
 

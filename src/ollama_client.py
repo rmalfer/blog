@@ -176,9 +176,13 @@ class OllamaClient:
         
         prompt_parts.append(
             "\nCom base nas informações acima, escreva uma reportagem completa, extensa e analítica "
-            "em HTML puro (usando tags <p>, <h2>, <strong>, <em>) com 5 a 6 parágrafos bem desenvolvidos "
-            "(cerca de 450 a 650 palavras) e 2 subtítulos <h2> organizando as seções. "
-            "NÃO inclua tag <h1> nem blocos markdown (```html). Comece diretamente com <p>."
+            "em HTML puro:\n"
+            "1. Inicie com <ul data-highlights=\"true\"> contendo 4 bullet points objetivos no formato "
+            "<li><strong>Rótulo curto:</strong> Explicação técnica objetiva em uma frase.</li>\n"
+            "2. Em seguida, escreva de 5 a 6 parágrafos <p> bem desenvolvidos (450 a 650 palavras) "
+            "com 2 subtítulos <h2> estratégicos organizando as seções, usando <strong> e <em> para conceitos e termos técnicos.\n"
+            "3. No primeiro parágrafo <p>, não repita literalmente o resumo base: abra com o contexto analítico e o impacto prático.\n"
+            "NÃO inclua tag <h1> nem blocos markdown (```html)."
         )
         
         prompt = "\n".join(prompt_parts)

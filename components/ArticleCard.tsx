@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Article } from '@/lib/types';
 import { formatDate } from '@/lib/utils';
+import { generateImageAlt, formatLeadSubtitle } from '@/lib/seo';
 import { Clock, User } from 'lucide-react';
 
 interface ArticleCardProps {
@@ -10,6 +11,9 @@ interface ArticleCardProps {
 }
 
 export function ArticleCard({ article, layout = 'horizontal' }: ArticleCardProps) {
+  const imageAlt = generateImageAlt(article);
+  const shortLead = formatLeadSubtitle(article);
+
   if (layout === 'vertical') {
     return (
       <article className="group flex flex-col bg-white border border-neutral-200 rounded-lg overflow-hidden hover:shadow-md transition-all">
@@ -17,7 +21,7 @@ export function ArticleCard({ article, layout = 'horizontal' }: ArticleCardProps
           <Link href={`/noticia/${article.slug}`} className="block relative aspect-[16/9] w-full overflow-hidden bg-neutral-100">
             <img
               src={article.image_url}
-              alt={article.title}
+              alt={imageAlt}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
             />
@@ -40,9 +44,9 @@ export function ArticleCard({ article, layout = 'horizontal' }: ArticleCardProps
             </h3>
           </Link>
 
-          {article.excerpt && (
+          {shortLead && (
             <p className="text-sm text-neutral-600 mt-2 line-clamp-2 leading-relaxed flex-1">
-              {article.excerpt}
+              {shortLead}
             </p>
           )}
 
@@ -67,7 +71,7 @@ export function ArticleCard({ article, layout = 'horizontal' }: ArticleCardProps
             <Link href={`/noticia/${article.slug}`} className="block relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-neutral-100">
               <img
                 src={article.image_url}
-                alt={article.title}
+                alt={imageAlt}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"
               />
@@ -91,9 +95,9 @@ export function ArticleCard({ article, layout = 'horizontal' }: ArticleCardProps
             </h2>
           </Link>
 
-          {article.excerpt && (
+          {shortLead && (
             <p className="text-sm sm:text-base text-neutral-600 line-clamp-2 leading-relaxed">
-              {article.excerpt}
+              {shortLead}
             </p>
           )}
 

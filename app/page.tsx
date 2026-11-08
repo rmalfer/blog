@@ -196,6 +196,32 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               ))
             )}
           </div>
+
+          {!searchQuery && (
+            <div className="pt-6 border-t border-neutral-200 flex flex-wrap items-center justify-between gap-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">
+                Explorar acervo completo:
+              </span>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  href="/categoria/inteligencia-artificial"
+                  className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider bg-neutral-100 hover:bg-black hover:text-white text-neutral-900 px-4 py-2.5 rounded-lg transition-colors"
+                >
+                  <Bot className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>Mais em Inteligência Artificial</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  href="/categoria/robos-humanoides"
+                  className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider bg-neutral-100 hover:bg-black hover:text-white text-neutral-900 px-4 py-2.5 rounded-lg transition-colors"
+                >
+                  <Cpu className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>Mais em Robôs Humanoides</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Coluna Direita: Sidebar TechCrunch */}

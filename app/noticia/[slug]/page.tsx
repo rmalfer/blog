@@ -14,6 +14,7 @@ import {
   generateSeoTitle,
   generateImageAlt,
   extractArticleHighlights,
+  getHighlightsHeading,
   enrichArticleContentWithInternalLinks,
   stripHtml,
 } from '@/lib/seo';
@@ -43,9 +44,13 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
 
-  if (!article) {
+  if (!article || article.status !== 'published') {
     return {
-      title: 'Notícia não encontrada',
+      title: 'Notícia indisponível',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
@@ -58,6 +63,11 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   const canonicalUrl = `${siteUrl}/noticia/${article.slug}`;
   const publishedIso = toValidIso8601(article.published_at);
   const modifiedIso = toValidIso8601(article.updated_at || article.published_at);
+  const absoluteImageUrl = article.image_url
+    ? article.image_url.startsWith('http')
+      ? article.image_url
+      : `${siteUrl}${article.image_url.startsWith('/') ? '' : '/'}${article.image_url}`
+    : null;
 
   return {
     title: seoTitle,
@@ -75,10 +85,10 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       modifiedTime: modifiedIso,
       section: article.category_name,
       authors: [article.author_name || 'Riccardo Malfer'],
-      images: article.image_url
+      images: absoluteImageUrl
         ? [
             {
-              url: article.image_url,
+              url: absoluteImageUrl,
               alt: imageAlt,
             },
           ]
@@ -88,7 +98,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       card: 'summary_large_image',
       title: seoTitle,
       description,
-      images: article.image_url ? [article.image_url] : [],
+      images: absoluteImageUrl ? [absoluteImageUrl] : [],
     },
   };
 }
@@ -99,7 +109,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
 
-  if (!article) {
+  if (!article || article.status !== 'published') {
     notFound();
   }
 
@@ -113,6 +123,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const seoTitle = generateSeoTitle(article);
   const imageAlt = generateImageAlt(article);
   const highlights = extractArticleHighlights(article);
+  const highlightsHeading = getHighlightsHeading(article);
   const enrichedHtmlContent = enrichArticleContentWithInternalLinks(
     article.content,
     article,
@@ -123,6 +134,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const publishedIso = toValidIso8601(article.published_at);
   const modifiedIso = toValidIso8601(article.updated_at || article.published_at);
   const canonicalUrl = `${siteUrl}/noticia/${article.slug}`;
+  const absoluteImageUrl = article.image_url
+    ? article.image_url.startsWith('http')
+      ? article.image_url
+      : `${siteUrl}${article.image_url.startsWith('/') ? '' : '/'}${article.image_url}`
+    : `${siteUrl}/icon.svg`;
 
   const jsonLdArticle = {
     '@context': 'https://schema.org',
@@ -130,7 +146,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     headline: article.title,
     alternativeHeadline: seoTitle,
     description: leadSubtitle,
-    image: article.image_url ? [article.image_url] : [`${siteUrl}/icon.svg`],
+    image: [absoluteImageUrl],
     datePublished: publishedIso,
     dateModified: modifiedIso,
     articleSection: article.category_name,
@@ -280,7 +296,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 />
               </div>
               <figcaption className="text-xs text-neutral-500 italic text-center">
-                {imageAlt} — Reprodução / Divulgação
+                {imageAlt} —{' '}
+                {article.image_url.startsWith('/images/')
+                  ? 'Acervo Editorial Um Futuro Próximo'
+                  : 'Reprodução / Divulgação'}
               </figcaption>
             </figure>
           )}
@@ -293,7 +312,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             >
               <h2 className="text-xs font-black uppercase tracking-wider text-emerald-900 flex items-center gap-2 mb-3">
                 <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Destaques da Notícia</span>
+                <span>{highlightsHeading}</span>
               </h2>
               <ul className="space-y-2.5 text-sm text-emerald-950 leading-relaxed list-disc pl-5 marker:text-emerald-600">
                 {highlights.map((item, idx) => (

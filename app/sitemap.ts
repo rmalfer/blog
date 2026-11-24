@@ -49,19 +49,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const categoryRoutes: MetadataRoute.Sitemap = categories.map((cat) => {
-    const latestInCat = articles.find((a) => a.category_slug === cat.slug);
-    const catLastMod = latestInCat
-      ? new Date(latestInCat.updated_at || latestInCat.published_at)
-      : latestArticleDate;
+  const categoryRoutes: MetadataRoute.Sitemap = categories
+    .filter((cat) => articles.some((a) => a.category_slug === cat.slug))
+    .map((cat) => {
+      const latestInCat = articles.find((a) => a.category_slug === cat.slug);
+      const catLastMod = latestInCat
+        ? new Date(latestInCat.updated_at || latestInCat.published_at)
+        : latestArticleDate;
 
-    return {
-      url: `${siteUrl}/categoria/${cat.slug}`,
-      lastModified: catLastMod,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    };
-  });
+      return {
+        url: `${siteUrl}/categoria/${cat.slug}`,
+        lastModified: catLastMod,
+        changeFrequency: 'daily',
+        priority: 0.8,
+      };
+    });
 
   const articleRoutes: MetadataRoute.Sitemap = articles.map((article) => ({
     url: `${siteUrl}/noticia/${article.slug}`,

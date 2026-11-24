@@ -4,93 +4,8 @@ import { HeroStory } from '@/components/HeroStory';
 import { ArticleCard } from '@/components/ArticleCard';
 import { Sidebar } from '@/components/Sidebar';
 import { AdSenseSlot } from '@/components/AdSenseSlot';
-import { Article } from '@/lib/types';
 import Link from 'next/link';
 import { Bot, Cpu, Sparkles, ArrowRight, Search, X } from 'lucide-react';
-
-// Amostra editorial inicial caso a base de dados ainda esteja aguardando o primeiro sync
-const INITIAL_DEMO_ARTICLES: Article[] = [
-  {
-    id: 'demo-1',
-    title: 'A Nova Fronteira dos Robôs Humanoides: Autonomia Física e Modelos Visão-Linguagem-Ação',
-    slug: 'nova-fronteira-robos-humanoides-autonomia-fisica-vla',
-    excerpt: 'Como a convergência entre modelos multimodais de ponta e nova geração de atuadores eletromecânicos está viabilizando a produção em massa de robôs bípedes em 2026.',
-    content: '<p>A robótica humanoide está vivenciando o momento mais transformador de sua história. Se nos últimos cinco anos o foco principal da inteligência artificial foi a linguagem textual e a geração visual em telas, o ano de 2026 marca a consolidação definitiva da <strong>Inteligência Artificial Corporificada (Embodied AI)</strong>.</p><p>Empresas globais como BYD, Tesla com o Optimus V3, Unitree e AgiBot aceleraram drasticamente suas linhas de montagem, projetando a fabricação de mais de 100 mil unidades até o fim deste ciclo. Essa mudança de paradigma é impulsionada pelos modelos <strong>Vision-Language-Action (VLA)</strong>, que permitem aos robôs compreender o espaço tridimensional, planejar rotas e manipular objetos complexos em ambientes dinâmicos e não-estruturados.</p><p>Além da manufatura pesada, setores como logística hospitalar e assistência residencial começam a receber os primeiros testes em escala real, inaugurando uma nova era para a produtividade humana.</p>',
-    category_name: 'Robôs Humanoides',
-    category_slug: 'robos-humanoides',
-    image_url: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80',
-    source_url: 'https://umfuturoproximo.vercel.app',
-    author_name: 'Riccardo Malfer',
-    author_role: 'Editor & Especialista em IA',
-    status: 'published',
-    is_featured: true,
-    reading_time: '4 min de leitura',
-    views_count: 1420,
-    published_at: new Date().toISOString(),
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'demo-2',
-    title: 'Modelos de Raciocínio Aberto e a Nova Geração Gemma: Otimização Extrema em Hardware Local',
-    slug: 'modelos-raciocinio-aberto-geracao-gemma-hardware-local',
-    excerpt: 'Análise detalhada sobre como novos modelos abertos estão superando fronteiras de raciocínio lógico mantendo execução ultra-rápida em máquinas locais.',
-    content: '<p>A capacidade de executar inteligência artificial de altíssimo nível diretamente em estações de trabalho locais, sem depender de nuvens externas para tarefas confidenciais, tornou-se prioridade para desenvolvedores e pesquisadores.</p><p>Com os novos lançamentos da família Gemma e ecossistemas como Ollama, a barreira de entrada para automações de alto calibre e análises contextuais densas caiu de forma espetacular. A arquitetura de decodificação eficiente garante tempos de resposta inferiores a 50 milissegundos por token em GPUs convencionais.</p>',
-    category_name: 'Inteligência Artificial',
-    category_slug: 'inteligencia-artificial',
-    image_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
-    source_url: 'https://umfuturoproximo.vercel.app',
-    author_name: 'Riccardo Malfer',
-    author_role: 'Editor & Especialista em IA',
-    status: 'published',
-    is_featured: false,
-    reading_time: '3 min de leitura',
-    views_count: 980,
-    published_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'demo-3',
-    title: 'IA e Biologia Sintética: Diagnósticos Moleculares Ultra-Precoces Entram em Fases Clínicas',
-    slug: 'ia-biologia-sintetica-diagnosticos-moleculares-fases-clinicas',
-    excerpt: 'Plataformas algorítmicas de predição molecular começam a identificar anomalias celulares anos antes dos primeiros sintomas perceptíveis.',
-    content: '<p>O casamento entre biotecnologia e aprendizado profundo computacional está redefinindo os fundamentos da medicina preventiva moderna.</p><p>Redes neurais treinadas em dados proteômicos maciços agora conseguem mapear padrões sutis de dobramento e mutações genéticas com precisão cirúrgica, acelerando testes clínicos que antes levavam décadas.</p>',
-    category_name: 'Saúde & Biotec',
-    category_slug: 'saude-biotec',
-    image_url: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80',
-    source_url: 'https://umfuturoproximo.vercel.app',
-    author_name: 'Riccardo Malfer',
-    author_role: 'Editor & Especialista em IA',
-    status: 'published',
-    is_featured: false,
-    reading_time: '3 min de leitura',
-    views_count: 750,
-    published_at: new Date(Date.now() - 3600000 * 5).toISOString(),
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'demo-4',
-    title: 'União Europeia Aplica Regras Finais de Transparência para Sistemas Autônomos',
-    slug: 'uniao-europeia-aplica-regras-finais-transparencia-sistemas-autonomos',
-    excerpt: 'Novos requisitos do Artigo 50 do AI Act entram em vigor em escala global, exigindo rotulagem mandatória para síntese algorítmica.',
-    content: '<p>As diretrizes internacionais de governança para tecnologias emergentes ganham força executiva com a implementação prática das medidas regulatórias europeias.</p>',
-    category_name: 'Inteligência Artificial',
-    category_slug: 'inteligencia-artificial',
-    image_url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
-    source_url: 'https://umfuturoproximo.vercel.app',
-    author_name: 'Riccardo Malfer',
-    author_role: 'Editor & Especialista em IA',
-    status: 'published',
-    is_featured: false,
-    reading_time: '4 min de leitura',
-    views_count: 620,
-    published_at: new Date(Date.now() - 3600000 * 10).toISOString(),
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
 
 export const revalidate = 60; // Revalida a cada 60 segundos no Vercel
 
@@ -103,20 +18,18 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const searchQuery = resolvedParams?.q?.trim() || '';
 
   const dbArticles = await getPublishedArticles({
-    limit: searchQuery ? 24 : 18,
+    limit: searchQuery ? 24 : 24,
     searchQuery: searchQuery || undefined,
   });
-  const articles = searchQuery
-    ? dbArticles
-    : dbArticles.length > 0
-      ? dbArticles
-      : INITIAL_DEMO_ARTICLES;
+  const articles = dbArticles;
 
   const featured = articles.filter((a) => a.is_featured);
-  const heroArticles = featured.length >= 4 ? featured : articles.slice(0, 4);
-  const feedArticles = searchQuery ? articles : articles.slice(heroArticles.length);
-  const trendingArticles = await getTrendingArticles(5);
-  const trending = trendingArticles.length > 0 ? trendingArticles : INITIAL_DEMO_ARTICLES.slice(0, 4);
+  const heroArticles = featured.length >= 4 ? featured.slice(0, 4) : articles.slice(0, 4);
+  const heroIds = new Set(heroArticles.map((a) => a.id || a.slug));
+  const feedArticles = searchQuery
+    ? articles
+    : articles.filter((a) => !heroIds.has(a.id || a.slug));
+  const trending = await getTrendingArticles(5);
 
   // Destaques de Robôs Humanoides
   const humanoidArticles = articles.filter(

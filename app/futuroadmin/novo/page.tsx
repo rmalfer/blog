@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
 import { generateSlug, calculateReadingTime } from '@/lib/utils';
-import { ArrowLeft, Save, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
 
 const CATEGORIES = [
   { name: 'Inteligência Artificial', slug: 'inteligencia-artificial' },
@@ -14,18 +13,38 @@ const CATEGORIES = [
   { name: 'Startups & Futuro', slug: 'startups-futuro' },
 ];
 
+const HOSTED_COVERS = [
+  { label: 'Capa IA (Hospedada)', url: '/images/covers/inteligencia-artificial-1.webp' },
+  { label: 'Capa IA 2 (Hospedada)', url: '/images/covers/inteligencia-artificial-2.webp' },
+  { label: 'Capa Robôs (Hospedada)', url: '/images/covers/robos-humanoides-1.webp' },
+  { label: 'Capa Robôs 2 (Hospedada)', url: '/images/covers/robos-humanoides-2.webp' },
+  { label: 'Capa Saúde & Biotec (Hospedada)', url: '/images/covers/saude-biotec-1.webp' },
+  { label: 'Capa Startups & Futuro (Hospedada)', url: '/images/covers/startups-futuro-1.webp' },
+];
+
 export default function NovoArtigoPage() {
   const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [excerpt, setExcerpt] = useState('');
   const [content, setContent] = useState('');
   const [categorySlug, setCategorySlug] = useState('inteligencia-artificial');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState('/images/covers/inteligencia-artificial-1.webp');
   const [sourceUrl, setSourceUrl] = useState('');
   const [isFeatured, setIsFeatured] = useState(false);
   const [status, setStatus] = useState<'published' | 'draft'>('published');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/admin/me', { cache: 'no-store' }).then((res) => {
+      if (!res.ok) {
+        router.replace('/futuroadmin');
+      } else {
+        setAuthorized(true);
+      }
+    });
+  }, [router]);
 
   const handleTitleChange = (val: string) => {
     setTitle(val);
@@ -61,13 +80,15 @@ export default function NovoArtigoPage() {
         published_at: new Date().toISOString(),
       };
 
-      const { error } = await supabase.from('articles').insert([newArticle]);
+      const res = await fetch('/api/admin/articles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newArticle),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erro ao publicar');
 
-      if (error) {
-        throw error;
-      }
-
-      alert('Artigo publicado com sucesso!');
+      alert('Artigo salvo com sucesso!');
       router.push('/futuroadmin');
     } catch (err: any) {
       alert(`Erro ao salvar artigo: ${err.message}`);
@@ -75,6 +96,14 @@ export default function NovoArtigoPage() {
       setLoading(false);
     }
   };
+
+  if (!authorized) {
+    return (
+      <div className="max-w-4xl mx-auto py-16 text-center text-neutral-400">
+        Verificando permissão...
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -92,21 +121,21 @@ export default function NovoArtigoPage() {
       <div>
         <h1 className="text-3xl font-black text-black tracking-tight">Criar Nova Matéria</h1>
         <p className="text-xs text-neutral-500 mt-1">
-          Preencha os campos abaixo para publicar um artigo no portal Um Futuro Próximo.
+          Deixe &ldquo;Link da Fonte Original&rdquo; vazio para marcar como artigo autoral/perene do portal.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
           <label className="text-xs font-black uppercase tracking-wider text-neutral-700">
-            Título da Notícia *
+            Título da Matéria *
           </label>
           <input
             type="text"
             required
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
-            placeholder="Ex: Nova geração de modelos robóticos atinge destreza manual de nível humano"
+            placeholder="Ex: Guia prático para rodar modelos locais com Ollama e Gemma"
             className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-lg text-base font-bold focus:outline-none focus:border-emerald-500 focus:bg-white"
           />
         </div>
@@ -151,7 +180,7 @@ export default function NovoArtigoPage() {
             rows={2}
             value={excerpt}
             onChange={(e) => setExcerpt(e.target.value)}
-            placeholder="Breve resumo informativo da notícia (exibido na capa e nos cards de SEO)..."
+            placeholder="Breve resumo informativo da matéria (120 a 160 caracteres)..."
             className="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500 focus:bg-white"
           />
         </div>
@@ -159,26 +188,40 @@ export default function NovoArtigoPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-wider text-neutral-700">
-              URL da Imagem de Destaque
+              Imagem Hospedada / URL da Capa
             </label>
             <input
-              type="url"
+              type="text"
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://exemplo.com/foto.jpg"
+              placeholder="/images/covers/inteligencia-artificial-1.webp"
               className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-xs focus:outline-none focus:border-emerald-500"
             />
+            <select
+              value=""
+              onChange={(e) => {
+                if (e.target.value) setImageUrl(e.target.value);
+              }}
+              className="w-full px-3 py-1.5 bg-white border border-neutral-200 rounded text-xs text-neutral-600"
+            >
+              <option value="">Escolher capa hospedada do portal...</option>
+              {HOSTED_COVERS.map((c) => (
+                <option key={c.url} value={c.url}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-wider text-neutral-700">
-              Link da Fonte Original
+              Link da Fonte Original (opcional)
             </label>
             <input
               type="url"
               value={sourceUrl}
               onChange={(e) => setSourceUrl(e.target.value)}
-              placeholder="https://techcrunch.com/2026/..."
+              placeholder="Deixe vazio para artigo autoral"
               className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-xs focus:outline-none focus:border-emerald-500"
             />
           </div>
@@ -193,17 +236,16 @@ export default function NovoArtigoPage() {
               src={imageUrl}
               alt="Preview"
               className="max-h-48 rounded object-cover border border-neutral-300"
-              onError={() => alert('URL da imagem inválida ou bloqueada!')}
             />
           </div>
         )}
 
         <div className="space-y-2">
           <label className="text-xs font-black uppercase tracking-wider text-neutral-700">
-            Conteúdo da Matéria (HTML ou Parágrafos) *
+            Conteúdo da Matéria (HTML) *
           </label>
           <textarea
-            rows={12}
+            rows={14}
             required
             value={content}
             onChange={(e) => setContent(e.target.value)}
@@ -222,7 +264,7 @@ export default function NovoArtigoPage() {
                 className="w-4 h-4 text-emerald-600 rounded"
               />
               <span className="text-xs font-bold text-neutral-800">
-                Fixar na Capa Principal (The Big Story)
+                Fixar na Capa Principal
               </span>
             </label>
 
@@ -233,8 +275,8 @@ export default function NovoArtigoPage() {
                 onChange={(e) => setStatus(e.target.value as any)}
                 className="px-2 py-1 bg-white border border-neutral-300 rounded text-xs"
               >
-                <option value="published">Publicado</option>
-                <option value="draft">Rascunho</option>
+                <option value="published">Ativa (Publicada)</option>
+                <option value="draft">Inativa (Oculta)</option>
               </select>
             </label>
           </div>
@@ -245,7 +287,7 @@ export default function NovoArtigoPage() {
             className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-xs uppercase tracking-wider rounded-lg transition-colors shadow-sm disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
-            <span>{loading ? 'Salvando...' : 'Publicar Artigo'}</span>
+            <span>{loading ? 'Salvando...' : 'Salvar Artigo'}</span>
           </button>
         </div>
       </form>

@@ -1,12 +1,29 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Bot, CheckCircle, RefreshCw, Terminal, Layers, FileSpreadsheet } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, CheckCircle, RefreshCw, Terminal, FileSpreadsheet } from 'lucide-react';
 
 export default function SyncAdminPage() {
-  const [syncing, setSyncing] = useState(false);
+  const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
   const [output, setOutput] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/api/admin/me', { cache: 'no-store' }).then((res) => {
+      if (!res.ok) router.replace('/futuroadmin');
+      else setAuthorized(true);
+    });
+  }, [router]);
+
+  if (!authorized) {
+    return (
+      <div className="max-w-4xl mx-auto py-16 text-center text-neutral-400">
+        Verificando permissão...
+      </div>
+    );
+  }
 
   const triggerLocalSync = () => {
     setOutput(

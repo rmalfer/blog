@@ -158,18 +158,20 @@ class SupabasePublisher:
             payload['created_at'] = data['created_at']
 
         # 1. Verifica se o artigo com este slug já existe
-        check_url = f"{self.url}/rest/v1/articles?slug=eq.{slug}&select=id,slug,published_at,created_at,image_url,is_featured"
+        check_url = f"{self.url}/rest/v1/articles?slug=eq.{slug}&select=id,slug,status,published_at,created_at,image_url,is_featured"
         try:
             check_res = requests.get(check_url, headers=self.headers, timeout=10)
             existing = check_res.json() if check_res.status_code == 200 else []
 
             if existing and len(existing) > 0:
-                # Atualiza o artigo existente (PATCH)
+                # Atualiza o artigo existente (PATCH) preservando o status configurado no admin
                 curr = existing[0]
                 art_id = curr['id']
                 if preserve_dates:
                     payload.pop('published_at', None)
                     payload.pop('created_at', None)
+                if curr.get('status') in ('draft', 'archived'):
+                    payload['status'] = curr['status']
                 if not payload.get('image_url') and curr.get('image_url'):
                     payload['image_url'] = curr['image_url']
                 if curr.get('is_featured'):

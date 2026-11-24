@@ -204,13 +204,15 @@ def run_supabase_pipeline(
                     if '<p>' not in content and '<div' not in content:
                         content = "".join(f"<p>{p.strip()}</p>" for p in content.split('\n\n') if p.strip())
 
-                    # Busca imagem de capa
-                    image_url = ''
-                    if link:
-                        logger.info("Buscando imagem de capa em: %s", link)
-                        image_url = fetch_main_image(link) or ''
-                        if image_url:
-                            logger.info("Imagem de capa encontrada: %s", image_url)
+                    # Busca e hospeda imagem de capa localmente (ou usa capa editorial hospedada)
+                    image_url = fetch_main_image(
+                        link,
+                        slug=existing_slug,
+                        category_slug=cat_slug,
+                        host_locally=True
+                    ) or ''
+                    if image_url:
+                        logger.info("Imagem de capa hospedada: %s", image_url)
 
                     published_date = parse_sheet_date(item.get('date', ''), item.get('row_number', 0))
 
@@ -510,7 +512,13 @@ def reprocess_published_articles(
         t['link'] = link
         t['source_text'] = fetch_source_article_text(link, timeout=5, max_chars=2500) if link else ''
         if not (db_art and db_art.get('image_url')) and link:
-            t['fetched_image'] = fetch_main_image(link, timeout=5) or ''
+            t['fetched_image'] = fetch_main_image(
+                link,
+                timeout=5,
+                slug=t['slug'],
+                category_slug=t['cat_slug'],
+                host_locally=True
+            ) or ''
         else:
             t['fetched_image'] = ''
         return t

@@ -2,16 +2,39 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_URL } from '@/lib/utils';
-import { Mail, MapPin, MessageSquare, Send, ShieldCheck } from 'lucide-react';
+import { Mail, MapPin, MessageSquare, ArrowUpRight, ShieldCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Contato e Redação',
   description:
-    'Entre em contato com a redação e o editor-chefe Riccardo Malfer do portal Um Futuro Próximo para envio de pautas, sugestões, imprensa, publicidade e solicitações LGPD.',
+    'Entre em contato com a redação e o editor-chefe Riccardo Malfer do portal Um Futuro Próximo pelo e-mail rmalfer@gmail.com.',
   alternates: {
     canonical: `${SITE_URL}/contato`,
   },
 };
+
+const CONTACT_TOPICS = [
+  {
+    title: 'Sugestões de Pauta & Imprensa',
+    description: 'Envie comunicados oficiais, pesquisas acadêmicas ou sugestões de cobertura editorial.',
+    subject: 'Sugestão de Pauta — Um Futuro Próximo',
+  },
+  {
+    title: 'Correções & Feedback Editorial',
+    description: 'Encontrou alguma imprecisão técnica ou quer contribuir com dados adicionais?',
+    subject: 'Feedback Editorial — Um Futuro Próximo',
+  },
+  {
+    title: 'Parcerias & Publicidade',
+    description: 'Propostas comerciais, projetos especiais e colaborações com o portal.',
+    subject: 'Parcerias e Publicidade — Um Futuro Próximo',
+  },
+  {
+    title: 'Privacidade & Solicitações LGPD',
+    description: 'Dúvidas sobre dados pessoais, cookies ou exercício de direitos previstos na LGPD.',
+    subject: 'Solicitação LGPD — Um Futuro Próximo',
+  },
+];
 
 export default function ContatoPage() {
   return (
@@ -26,11 +49,11 @@ export default function ContatoPage() {
           Fale com o Um Futuro Próximo
         </h1>
         <p className="text-neutral-400 text-base sm:text-lg mt-3 max-w-2xl">
-          Canal direto com a nossa editoria para sugestões de pauta, comunicados de imprensa, parcerias comerciais, correções ou solicitações de privacidade.
+          Canal direto com o editor-chefe Riccardo Malfer para sugestões de pauta, imprensa, correções, parcerias ou solicitações de privacidade.
         </p>
       </div>
 
-      {/* Grid de Canais + Informações */}
+      {/* Contato Direto */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         <div className="md:col-span-5 space-y-6">
           <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-4">
@@ -39,13 +62,14 @@ export default function ContatoPage() {
             </div>
             <h2 className="text-lg font-black text-black">E-mail Direto da Redação</h2>
             <p className="text-sm text-neutral-600 leading-relaxed">
-              Para pautas jornalísticas, press releases, solicitações de parceria ou contato direto com o editor-chefe <strong>Riccardo Malfer</strong>:
+              Para falar diretamente com <strong>Riccardo Malfer</strong>, clique no endereço abaixo para abrir seu aplicativo de e-mail:
             </p>
             <a
-              href="mailto:contato@umfuturoproximo.com.br"
-              className="inline-block text-sm font-black text-emerald-700 hover:text-emerald-900 bg-emerald-50 px-4 py-2.5 rounded-lg border border-emerald-200 break-all"
+              href="mailto:rmalfer@gmail.com?subject=Contato%20—%20Um%20Futuro%20Pr%C3%B3ximo"
+              className="inline-flex items-center gap-2 text-sm font-black text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-4 py-3 rounded-lg border border-emerald-200 break-all transition-colors"
             >
-              contato@umfuturoproximo.com.br
+              <span>rmalfer@gmail.com</span>
+              <ArrowUpRight className="w-4 h-4 shrink-0" />
             </a>
           </div>
 
@@ -55,7 +79,8 @@ export default function ContatoPage() {
             </div>
             <h2 className="text-lg font-black text-black">Localização & Expediente</h2>
             <p className="text-sm text-neutral-600 leading-relaxed">
-              <strong>São Paulo — SP, Brasil</strong><br />
+              <strong>São Paulo — SP, Brasil</strong>
+              <br />
               Atendimento editorial de segunda a sexta-feira, das 9h às 18h (Horário de Brasília — BRT).
             </p>
           </div>
@@ -66,91 +91,53 @@ export default function ContatoPage() {
               <span>Privacidade & LGPD</span>
             </div>
             <p className="text-xs text-neutral-600 leading-relaxed">
-              Consulte nossa <Link href="/privacidade" className="text-emerald-700 font-bold underline">Política de Privacidade</Link> para informações sobre proteção de dados e gerenciamento de cookies.
+              Consulte nossa{' '}
+              <Link href="/privacidade" className="text-emerald-700 font-bold underline">
+                Política de Privacidade
+              </Link>{' '}
+              para informações sobre proteção de dados e gerenciamento de cookies.
             </p>
           </div>
         </div>
 
-        {/* Formulário de Contato via mailto estruturado */}
-        <div className="md:col-span-7 bg-white border border-neutral-200 rounded-2xl p-6 sm:p-8">
-          <h2 className="text-xl font-black text-black mb-2">Envie uma Mensagem</h2>
-          <p className="text-sm text-neutral-500 mb-6">
-            Preencha os campos abaixo para encaminhar sua mensagem diretamente à nossa caixa editorial.
-          </p>
+        {/* Atalhos diretos por assunto (links mailto limpos) */}
+        <div className="md:col-span-7 bg-white border border-neutral-200 rounded-2xl p-6 sm:p-8 flex flex-col justify-between space-y-6">
+          <div>
+            <h2 className="text-xl font-black text-black mb-2">Escolha o assunto e envie um e-mail</h2>
+            <p className="text-sm text-neutral-500 mb-6">
+              Nosso atendimento é feito exclusivamente por e-mail direto para garantir agilidade e privacidade sem armazenar formulários de terceiros.
+            </p>
 
-          <form
-            action="mailto:contato@umfuturoproximo.com.br"
-            method="post"
-            encType="text/plain"
-            className="space-y-4"
-          >
-            <div>
-              <label htmlFor="nome" className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                Seu Nome Completo *
-              </label>
-              <input
-                id="nome"
-                name="Nome"
-                type="text"
-                required
-                placeholder="Ex: João Silva"
-                className="w-full px-4 py-2.5 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-500"
-              />
+            <div className="space-y-3">
+              {CONTACT_TOPICS.map((topic) => (
+                <a
+                  key={topic.title}
+                  href={`mailto:rmalfer@gmail.com?subject=${encodeURIComponent(topic.subject)}`}
+                  className="group block p-4 rounded-xl border border-neutral-200 hover:border-emerald-500 hover:bg-emerald-50/40 transition-all"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="text-sm font-black text-black group-hover:text-emerald-700 transition-colors">
+                      {topic.title}
+                    </h3>
+                    <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:text-emerald-600 shrink-0" />
+                  </div>
+                  <p className="text-xs text-neutral-600 mt-1 leading-relaxed">
+                    {topic.description}
+                  </p>
+                </a>
+              ))}
             </div>
+          </div>
 
-            <div>
-              <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                Seu E-mail *
-              </label>
-              <input
-                id="email"
-                name="Email"
-                type="email"
-                required
-                placeholder="seuemail@exemplo.com.br"
-                className="w-full px-4 py-2.5 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="assunto" className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                Assunto *
-              </label>
-              <select
-                id="assunto"
-                name="Assunto"
-                className="w-full px-4 py-2.5 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-500 bg-white"
-              >
-                <option value="Sugestão de Pauta / Imprensa">Sugestão de Pauta / Imprensa</option>
-                <option value="Dúvida ou Correção Editorial">Dúvida ou Correção Editorial</option>
-                <option value="Publicidade e Parcerias">Publicidade e Parcerias</option>
-                <option value="Privacidade e Proteção de Dados (LGPD)">Privacidade e Proteção de Dados (LGPD)</option>
-                <option value="Outros Assuntos">Outros Assuntos</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="mensagem" className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                Mensagem *
-              </label>
-              <textarea
-                id="mensagem"
-                name="Mensagem"
-                rows={5}
-                required
-                placeholder="Escreva sua mensagem com detalhes..."
-                className="w-full px-4 py-2.5 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-black hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-wider px-6 py-3.5 rounded-lg transition-colors"
+          <div className="pt-4 border-t border-neutral-200">
+            <a
+              href="mailto:rmalfer@gmail.com?subject=Contato%20—%20Um%20Futuro%20Pr%C3%B3ximo"
+              className="w-full inline-flex items-center justify-center gap-2 bg-black hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-wider px-6 py-4 rounded-xl transition-colors"
             >
-              <Send className="w-4 h-4 text-emerald-400" />
-              <span>Enviar Mensagem para a Redação</span>
-            </button>
-          </form>
+              <Mail className="w-4 h-4 text-emerald-400" />
+              <span>Escrever agora para rmalfer@gmail.com</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>

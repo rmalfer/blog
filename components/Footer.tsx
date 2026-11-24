@@ -15,33 +15,30 @@ export function Footer() {
             <div className="lg:col-span-7">
               <div className="inline-flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2">
                 <Cpu className="w-4 h-4" />
-                <span>Boletim Semanal de Tecnologia</span>
+                <span>Redação & Sugestões de Pauta</span>
               </div>
               <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                Receba o futuro diretamente na sua caixa de entrada
+                Envie pautas, pesquisas ou fale diretamente com o editor
               </h3>
               <p className="text-neutral-400 text-sm mt-2 max-w-xl">
-                Curadoria aprofundada sobre modelos de Inteligência Artificial, avanços na robótica humanoide e disrupções de mercado. Sem ruído, apenas conteúdo relevante.
+                Cobertura independente sobre Inteligência Artificial, robótica humanoide, biotecnologia e inovação. Contato direto pelo e-mail rmalfer@gmail.com.
               </p>
             </div>
-            <div className="lg:col-span-5">
-              <form onSubmit={(e) => { e.preventDefault(); alert('Obrigado por assinar!'); }} className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="email"
-                  required
-                  placeholder="Seu melhor e-mail profissional"
-                  className="bg-neutral-950 border border-neutral-700 text-white placeholder-neutral-500 text-sm px-4 py-3 rounded focus:outline-none focus:border-emerald-500 flex-1"
-                />
-                <button
-                  type="submit"
-                  className="bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-sm uppercase px-6 py-3 rounded transition-all whitespace-nowrap"
-                >
-                  Inscrever-se
-                </button>
-              </form>
-              <span className="text-[11px] text-neutral-500 mt-2 block">
-                Privacidade garantida. Você pode cancelar a inscrição a qualquer momento.
-              </span>
+            <div className="lg:col-span-5 flex flex-col sm:flex-row lg:justify-end gap-3">
+              <a
+                href="mailto:rmalfer@gmail.com?subject=Boletim%20e%20Pautas%20—%20Um%20Futuro%20Pr%C3%B3ximo"
+                className="inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-xs uppercase tracking-wider px-6 py-3.5 rounded-lg transition-all whitespace-nowrap"
+              >
+                <Mail className="w-4 h-4" />
+                <span>Falar com a Redação</span>
+              </a>
+              <Link
+                href="/contato"
+                className="inline-flex items-center justify-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-white font-bold text-xs uppercase tracking-wider px-5 py-3.5 rounded-lg transition-all whitespace-nowrap"
+              >
+                <span>Página de Contato</span>
+                <ArrowUpRight className="w-4 h-4 text-emerald-400" />
+              </Link>
             </div>
           </div>
         </div>

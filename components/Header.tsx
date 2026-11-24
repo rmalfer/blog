@@ -118,13 +118,13 @@ export function Header() {
               </button>
             )}
 
-            <a
-              href="#newsletter"
+            <Link
+              href="/contato"
               className="bg-black hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded transition-all shadow-sm flex items-center gap-1.5"
             >
               <Bot className="w-4 h-4 text-emerald-400" />
-              <span>Boletim IA</span>
-            </a>
+              <span>Fale Conosco</span>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}

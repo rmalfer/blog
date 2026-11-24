@@ -228,12 +228,40 @@ export function generateImageAlt(article: Article): string {
 }
 
 /**
- * 4. Destaques da Notícia (Box de Destaque em 3 a 4 Bullet Points para SEO / GEO / Featured Snippets)
- * Extrai bullet points estruturados (Label + Explicação objetiva) sem repetir o Subtítulo (Lead).
+ * Hash determinístico simples para variar a apresentação de artigos sem
+ * marcação explícita de bullets, evitando layouts 100% idênticos entre páginas.
+ */
+function stableSlugHash(slug: string): number {
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) {
+    hash = (hash * 31 + slug.charCodeAt(i)) >>> 0;
+  }
+  return hash;
+}
+
+export function getHighlightsHeading(article: Article): string {
+  const headings = [
+    'Pontos-Chave',
+    'Resumo Executivo',
+    'Destaques da Análise',
+    'Em Síntese',
+  ];
+  return headings[stableSlugHash(article.slug || article.title) % headings.length];
+}
+
+/**
+ * 4. Destaques da Matéria (Box de Destaque com quantidade variável de bullets: 0, 2, 3, 4 ou 5)
+ * Respeita o plano sorteado pelo motor editorial: não força caixa de destaques quando
+ * o artigo opta por narrativa direta (data-no-highlights="true") e suporta de 2 a 5 itens.
  */
 export function extractArticleHighlights(article: Article): HighlightItem[] {
   const curated = CURATED_OVERRIDES[article.slug]?.highlights;
   if (curated) return curated;
+
+  // Se o artigo foi marcado para fluxo narrativo direto (0 bullets), não exibe o box
+  if (/data-no-highlights=["']true["']/i.test(article.content)) {
+    return [];
+  }
 
   // 1. Verifica se o HTML do artigo já possui um bloco <ul data-highlights="true">
   const explicitListMatch = article.content.match(
@@ -252,7 +280,7 @@ export function extractArticleHighlights(article: Article): HighlightItem[] {
       } else {
         const rawLi = stripHtml(m[1]);
         const colonIdx = rawLi.indexOf(':');
-        if (colonIdx > 2 && colonIdx < 40) {
+        if (colonIdx > 2 && colonIdx < 45) {
           parsed.push({
             label: rawLi.slice(0, colonIdx).trim(),
             text: rawLi.slice(colonIdx + 1).trim(),
@@ -265,10 +293,14 @@ export function extractArticleHighlights(article: Article): HighlightItem[] {
         }
       }
     }
-    if (parsed.length >= 3) return parsed.slice(0, 4);
+    if (parsed.length >= 2) return parsed.slice(0, 5);
   }
 
-  // 2. Extração determinística inteligente a partir dos parágrafos e subtítulos <h2> do artigo
+  // 2. Para artigos sem lista explícita, varia organicamente a quantidade (0, 3, 4 ou 5) pelo slug
+  const h = stableSlugHash(article.slug || article.title) % 100;
+  const targetCount = h < 25 ? 0 : h < 55 ? 3 : h < 82 ? 4 : 5;
+  if (targetCount === 0) return [];
+
   const leadNorm = formatLeadSubtitle(article).toLowerCase().slice(0, 60);
   const paragraphs = Array.from(article.content.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)).map(
     (m) => m[1]
@@ -281,23 +313,22 @@ export function extractArticleHighlights(article: Article): HighlightItem[] {
     'Arquitetura e tecnologia',
     'Funcionamento na prática',
     'Impacto estratégico',
-    'Perspectivas para o setor',
+    'Limites e desafios',
+    'Desdobramentos no setor',
   ];
 
   const items: HighlightItem[] = [];
   const usedSentences = new Set<string>();
 
-  for (let i = 0; i < paragraphs.length && items.length < 4; i++) {
+  for (let i = 0; i < paragraphs.length && items.length < targetCount; i++) {
     const pHtml = paragraphs[i];
     const pText = stripHtml(pHtml);
 
-    // Extrai as frases do parágrafo
     const sentences = pText
       .split(/(?<=[.!?])\s+/)
       .map((s) => s.trim())
       .filter((s) => s.length >= 45 && s.length <= 190);
 
-    // Escolhe uma frase que não seja idêntica ao lead
     const chosen = sentences.find((s) => {
       const sNorm = s.toLowerCase();
       return !sNorm.includes(leadNorm) && !usedSentences.has(sNorm);
@@ -306,7 +337,6 @@ export function extractArticleHighlights(article: Article): HighlightItem[] {
     if (!chosen) continue;
     usedSentences.add(chosen.toLowerCase());
 
-    // Tenta extrair um rótulo técnico de uma tag <strong> ou <em> do parágrafo, ou de um <h2>
     const tagMatches = Array.from(
       pHtml.matchAll(/<(?:strong|em)>([^<]{3,32})<\/(?:strong|em)>/gi)
     ).map((m) => stripHtml(m[1]).replace(/[:.,;]+$/, ''));
@@ -332,7 +362,7 @@ export function extractArticleHighlights(article: Article): HighlightItem[] {
     });
   }
 
-  return items.slice(0, 4);
+  return items.slice(0, targetCount);
 }
 
 /**
@@ -347,11 +377,10 @@ export function enrichArticleContentWithInternalLinks(
 ): string {
   if (!htmlContent) return '';
 
-  // Remove bloco <ul data-highlights="true"> do corpo para não duplicar o box de destaques
-  let cleaned = htmlContent.replace(
-    /<ul[^>]*data-highlights=["']true["'][^>]*>[\s\S]*?<\/ul>/gi,
-    ''
-  );
+  // Remove bloco <ul data-highlights="true"> e marcador data-no-highlights do corpo
+  let cleaned = htmlContent
+    .replace(/<ul[^>]*data-highlights=["']true["'][^>]*>[\s\S]*?<\/ul>/gi, '')
+    .replace(/<div[^>]*data-no-highlights=["']true["'][^>]*>\s*<\/div>/gi, '');
 
   // Conta quantos links internos já existem no HTML
   const existingInternalLinks = (cleaned.match(/href=["']\/(?:noticia|categoria)\//gi) || [])

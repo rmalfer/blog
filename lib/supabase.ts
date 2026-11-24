@@ -79,13 +79,21 @@ export async function getFeaturedArticles(limit: number = 5): Promise<Article[]>
   }
 }
 
-export async function getArticleBySlug(slug: string): Promise<Article | null> {
+export async function getArticleBySlug(
+  slug: string,
+  options: { includeInactive?: boolean } = {}
+): Promise<Article | null> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('articles')
       .select('*')
-      .eq('slug', slug)
-      .single();
+      .eq('slug', slug);
+
+    if (!options.includeInactive) {
+      query = query.eq('status', 'published');
+    }
+
+    const { data, error } = await query.single();
 
     if (error) {
       console.warn('Supabase getArticleBySlug warning:', error.message);

@@ -112,7 +112,7 @@ export default function PrivacidadePage() {
         <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-5 my-4 text-sm space-y-1">
           <p className="mb-1"><strong>Portal:</strong> Um Futuro Próximo (<a href="https://umfuturoproximo.com.br">umfuturoproximo.com.br</a>)</p>
           <p className="mb-1"><strong>Responsável Editorial e Encarregado de Dados:</strong> Riccardo Malfer</p>
-          <p className="mb-1"><strong>E-mail de Contato:</strong> <a href="mailto:contato@umfuturoproximo.com.br">contato@umfuturoproximo.com.br</a></p>
+          <p className="mb-1"><strong>E-mail de Contato:</strong> <a href="mailto:rmalfer@gmail.com">rmalfer@gmail.com</a></p>
           <p className="mb-0"><strong>Localização:</strong> São Paulo — SP, Brasil</p>
         </div>
       </div>

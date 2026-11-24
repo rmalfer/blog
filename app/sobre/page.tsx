@@ -97,7 +97,7 @@ export default function SobrePage() {
           <p className="m-0"><strong>Domínio Oficial:</strong> <a href="https://umfuturoproximo.com.br">https://umfuturoproximo.com.br</a></p>
           <p className="m-0"><strong>Direção Editorial e Curadoria:</strong> Riccardo Malfer</p>
           <p className="m-0"><strong>Sede Editorial:</strong> São Paulo — SP, Brasil</p>
-          <p className="m-0"><strong>E-mail da Redação:</strong> <a href="mailto:contato@umfuturoproximo.com.br">contato@umfuturoproximo.com.br</a></p>
+          <p className="m-0"><strong>E-mail da Redação:</strong> <a href="mailto:rmalfer@gmail.com">rmalfer@gmail.com</a></p>
           <p className="m-0"><strong>Canal de Atendimento:</strong> <Link href="/contato">Página de Contato</Link></p>
         </div>
       </div>

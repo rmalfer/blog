@@ -41,12 +41,14 @@ export async function generateMetadata({
   const baseUrl = `${SITE_URL}/categoria/${category.slug}`;
   const canonicalUrl = currentPage > 1 ? `${baseUrl}?page=${currentPage}` : baseUrl;
   const pageSuffix = currentPage > 1 ? ` (Página ${currentPage})` : '';
+  const activeCount = (await getPublishedArticles({ categorySlug: slug, limit: 1 })).length;
 
   return {
     title: `${category.name} — Notícias e Análises${pageSuffix}`,
     description:
       category.description ||
       `Notícias mais recentes sobre ${category.name} por Riccardo Malfer.${pageSuffix}`,
+    ...(activeCount === 0 ? { robots: { index: false, follow: true } } : {}),
     alternates: {
       canonical: canonicalUrl,
     },
@@ -115,14 +117,20 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         <div className="lg:col-span-8 space-y-6">
           {articles.length === 0 ? (
-            <div className="text-center py-16 bg-neutral-50 rounded-xl border border-neutral-200">
+            <div className="text-center py-16 bg-neutral-50 rounded-xl border border-neutral-200 px-6">
               <IconComponent className="w-12 h-12 text-neutral-400 mx-auto mb-3" />
               <h3 className="text-lg font-bold text-neutral-800">
-                Nenhuma notícia publicada nesta categoria ainda
+                Novas análises desta editoria em breve
               </h3>
-              <p className="text-sm text-neutral-500 mt-1">
-                Execute o pipeline de sincronização para carregar novas matérias.
+              <p className="text-sm text-neutral-500 mt-1 mb-5">
+                Estamos selecionando e revisando reportagens aprofundadas para esta seção.
               </p>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 bg-black text-white text-xs font-bold uppercase tracking-wider px-5 py-2.5 rounded-lg hover:bg-emerald-600 transition-colors"
+              >
+                Explorar análises em destaque
+              </Link>
             </div>
           ) : (
             <>

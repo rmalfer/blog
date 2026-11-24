@@ -90,7 +90,7 @@ export default function RootLayout({
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'editorial',
-      email: 'contato@umfuturoproximo.com.br',
+      email: 'rmalfer@gmail.com',
       url: `${siteUrl}/contato`,
     },
     publishingPrinciples: `${siteUrl}/sobre`,

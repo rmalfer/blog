@@ -3,10 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
 import { Article } from '@/lib/types';
 import { calculateReadingTime } from '@/lib/utils';
-import { ArrowLeft, Save, Trash2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Save, ExternalLink } from 'lucide-react';
 
 const CATEGORIES = [
   { name: 'Inteligência Artificial', slug: 'inteligencia-artificial' },
@@ -42,14 +41,16 @@ export default function EditarArtigoPage() {
   const loadArticle = async (articleId: string) => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('articles')
-        .select('*')
-        .eq('id', articleId)
-        .single();
-
-      if (!error && data) {
-        const art = data as Article;
+      const res = await fetch(`/api/admin/articles?id=${encodeURIComponent(articleId)}`, {
+        cache: 'no-store',
+      });
+      if (res.status === 401) {
+        router.replace('/futuroadmin');
+        return;
+      }
+      const data = await res.json();
+      if (res.ok && data.article) {
+        const art = data.article as Article;
         setArticle(art);
         setTitle(art.title);
         setSlug(art.slug);
@@ -92,12 +93,15 @@ export default function EditarArtigoPage() {
         status,
         is_featured: isFeatured,
         reading_time: readingTime,
-        updated_at: new Date().toISOString(),
       };
 
-      const { error } = await supabase.from('articles').update(updates).eq('id', id);
-
-      if (error) throw error;
+      const res = await fetch('/api/admin/articles', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, updates }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erro ao atualizar');
 
       alert('Artigo atualizado com sucesso!');
       router.push('/futuroadmin');
@@ -137,25 +141,27 @@ export default function EditarArtigoPage() {
           <ArrowLeft className="w-4 h-4" />
           <span>Voltar ao Painel</span>
         </Link>
-        <Link
-          href={`/noticia/${article.slug}`}
-          target="_blank"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 hover:underline"
-        >
-          <span>Ver no site público</span>
-          <ExternalLink className="w-3.5 h-3.5" />
-        </Link>
+        {status === 'published' && (
+          <Link
+            href={`/noticia/${article.slug}`}
+            target="_blank"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 hover:underline"
+          >
+            <span>Ver no site público</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </Link>
+        )}
       </div>
 
       <div>
-        <h1 className="text-3xl font-black text-black tracking-tight">Editar Notícia</h1>
+        <h1 className="text-3xl font-black text-black tracking-tight">Editar Matéria</h1>
         <p className="text-xs text-neutral-500 mt-1 font-mono">ID: {article.id}</p>
       </div>
 
       <form onSubmit={handleUpdate} className="space-y-6">
         <div className="space-y-2">
           <label className="text-xs font-black uppercase tracking-wider text-neutral-700">
-            Título da Notícia *
+            Título *
           </label>
           <input
             type="text"
@@ -169,7 +175,7 @@ export default function EditarArtigoPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-wider text-neutral-700">
-              Slug da URL
+              Slug da URL (não altere para manter link indexado)
             </label>
             <input
               type="text"
@@ -213,10 +219,10 @@ export default function EditarArtigoPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-wider text-neutral-700">
-              URL da Imagem de Destaque
+              Imagem Hospedada / URL
             </label>
             <input
-              type="url"
+              type="text"
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-xs focus:outline-none focus:border-emerald-500"
@@ -225,7 +231,7 @@ export default function EditarArtigoPage() {
 
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-wider text-neutral-700">
-              Link da Fonte Original
+              Link da Fonte Original (opcional)
             </label>
             <input
               type="url"
@@ -272,7 +278,7 @@ export default function EditarArtigoPage() {
                 className="w-4 h-4 text-emerald-600 rounded"
               />
               <span className="text-xs font-bold text-neutral-800">
-                Fixar na Capa Principal (The Big Story)
+                Fixar na Capa Principal
               </span>
             </label>
 
@@ -283,9 +289,9 @@ export default function EditarArtigoPage() {
                 onChange={(e) => setStatus(e.target.value as any)}
                 className="px-2 py-1 bg-white border border-neutral-300 rounded text-xs"
               >
-                <option value="published">Publicado</option>
-                <option value="draft">Rascunho</option>
-                <option value="archived">Arquivado</option>
+                <option value="published">Ativa (Publicada)</option>
+                <option value="draft">Inativa (Oculta / Link Preservado)</option>
+                <option value="archived">Arquivada</option>
               </select>
             </label>
           </div>

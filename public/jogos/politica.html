@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidade — Jogos e Aplicativos | Um Futuro Próximo</title>
+  <meta
+    name="description"
+    content="Política de Privacidade oficial para os jogos e aplicativos desenvolvidos por Um Futuro Próximo na Google Play Store e Apple App Store. Em conformidade com LGPD, GDPR, COPPA e políticas do Google Play Console."
+  />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.umfuturoproximo.com.br/jogos/politica.html" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --dark: #0a0a0a;
+      --green: #00d66c;
+      --green-dark: #059669;
+      --text: #171717;
+      --muted: #525252;
+      --subtle: #737373;
+      --border: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--green-dark);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    a:hover {
+      color: var(--dark);
+    }
+
+    /* Top bar */
+    .topbar {
+      background-color: var(--dark);
+      border-bottom: 1px solid #262626;
+      padding: 0.85rem 1.25rem;
+    }
+
+    .topbar-inner {
+      max-width: 896px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand:hover {
+      color: var(--green);
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background-color: var(--green);
+      display: inline-block;
+    }
+
+    .lang-jump {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #d4d4d4;
+      text-decoration: none;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid #333333;
+      border-radius: 999px;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .lang-jump:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* Main container */
+    main {
+      max-width: 896px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    /* Hero header */
+    .hero {
+      background-color: var(--dark);
+      color: #ffffff;
+      border-radius: 1rem;
+      padding: 2.25rem 2rem;
+      border-bottom: 4px solid var(--green);
+      margin-bottom: 2rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background-color: var(--green);
+      color: #000000;
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.3rem 0.7rem;
+      border-radius: 0.375rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.65rem, 4vw, 2.5rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      color: #ffffff;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-sub {
+      color: #a3a3a3;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid #262626;
+      font-size: 0.85rem;
+      color: #d4d4d4;
+    }
+
+    .meta-grid strong {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #a3a3a3;
+      margin-bottom: 0.15rem;
+    }
+
+    .meta-grid a {
+      color: var(--green);
+      word-break: break-word;
+    }
+
+    /* Content cards */
+    .card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .card h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--dark);
+      letter-spacing: -0.015em;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .card h2:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .card ul {
+      margin: 0.5rem 0 1rem 1.35rem;
+      color: var(--muted);
+    }
+
+    .card li {
+      margin-bottom: 0.45rem;
+    }
+
+    .card strong {
+      color: var(--text);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88em;
+      background-color: #f3f4f6;
+      color: #111827;
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.25rem;
+    }
+
+    .callout {
+      background-color: #f8fafc;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--green);
+      border-radius: 0.75rem;
+      padding: 1.15rem 1.25rem;
+      margin: 1rem 0;
+      font-size: 0.94rem;
+    }
+
+    .callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .contact-box {
+      background-color: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .contact-box p {
+      margin-bottom: 0.4rem;
+      font-size: 0.94rem;
+    }
+
+    .contact-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* English section */
+    .english-card {
+      background-color: #ffffff;
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--dark);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .english-badge {
+      display: inline-block;
+      background-color: #f3f4f6;
+      color: var(--dark);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 0.375rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .english-card h2 {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: var(--dark);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .english-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-top: 1.35rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .english-meta {
+      font-size: 0.88rem;
+      color: var(--subtle);
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .english-card p {
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .english-card ul {
+      margin: 0.4rem 0 0.9rem 1.35rem;
+      color: var(--muted);
+    }
+
+    .english-card li {
+      margin-bottom: 0.4rem;
+    }
+
+    .english-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem 1.25rem 2.5rem;
+      color: var(--subtle);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+      background-color: var(--surface);
+    }
+
+    footer a {
+      color: var(--subtle);
+    }
+
+    footer a:hover {
+      color: var(--dark);
+    }
+
+    @media (max-width: 640px) {
+      .hero,
+      .card,
+      .english-card {
+        padding: 1.5rem 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="https://www.umfuturoproximo.com.br">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span>Um Futuro Próximo</span>
+      </a>
+      <a class="lang-jump" href="#english-version">English Version ↓</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="badge">Política de Privacidade • Jogos &amp; Apps</div>
+      <h1>Política de Privacidade — Jogos e Aplicativos</h1>
+      <p class="hero-sub">
+        Aplicável a todos os jogos e aplicativos móveis publicados por <strong>Um Futuro Próximo</strong> na Google Play Store e na Apple App Store, em conformidade com a LGPD, GDPR, COPPA e diretrizes do Google Play Console.
+      </p>
+      <div class="meta-grid">
+        <div>
+          <strong>Última atualização</strong>
+          28 de novembro de 2026
+        </div>
+        <div>
+          <strong>Desenvolvedor / Controlador</strong>
+          Um Futuro Próximo (Riccardo Malfer)
+        </div>
+        <div>
+          <strong>URL oficial</strong>
+          <a href="https://www.umfuturoproximo.com.br/jogos/politica.html">www.umfuturoproximo.com.br/jogos/politica.html</a>
+        </div>
+        <div>
+          <strong>Suporte e privacidade</strong>
+          <a href="mailto:rmalfer@gmail.com">rmalfer@gmail.com</a>
+        </div>
+      </div>
+    </section>
+
+    <article class="card">
+      <h2>1. Introdução e Escopo</h2>
+      <p>
+        Esta Política de Privacidade descreve como os jogos e aplicativos móveis desenvolvidos e publicados por
+        <strong>Um Futuro Próximo</strong> (sob responsabilidade de <strong>Riccardo Malfer</strong>) coletam, utilizam, armazenam e protegem as informações dos usuários.
+      </p>
+      <p>
+        Esta política aplica-se a todos os títulos de jogos e aplicativos que referenciam esta página na
+        <strong>Google Play Store</strong>, na <strong>Apple App Store</strong> ou dentro do próprio aplicativo, em conformidade com a
+        <strong>Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)</strong>, o
+        <strong>Regulamento Geral sobre a Proteção de Dados da União Europeia (GDPR)</strong>, o
+        <strong>COPPA</strong> e as <strong>Políticas do Programa para Desenvolvedores do Google Play</strong>.
+      </p>
+
+      <h2>2. Dados Coletados e Armazenamento Local</h2>
+      <p>
+        Nossos jogos <strong>não exigem criação de conta, login, nome completo, CPF, endereço ou e-mail</strong> para serem jogados.
+      </p>
+
+      <h3>2.1 Dados salvos apenas no seu dispositivo</h3>
+      <p>
+        Para preservar sua experiência e progresso, nossos jogos podem salvar dados localmente no armazenamento interno do aparelho (como <code>SharedPreferences</code>, <code>UserDefaults</code> ou armazenamento local do aplicativo), incluindo:
+      </p>
+      <ul>
+        <li>Progresso de fases, pontuações, conquistas e estrelas;</li>
+        <li>Moedas virtuais, dicas, missões, inventário e itens desbloqueados (como skins ou temas);</li>
+        <li>Preferências de som, música, vibração, idioma, tema visual e configurações de jogabilidade;</li>
+        <li>Registro de recompensas diárias e status local de recursos desbloqueados ou assinaturas.</li>
+      </ul>
+      <div class="callout">
+        <p>
+          Esses dados <strong>permanecem exclusivamente no seu dispositivo</strong> e não são enviados para servidores próprios de <strong>Um Futuro Próximo</strong>.
+        </p>
+      </div>
+
+      <h3>2.2 Dados de diagnóstico e desempenho</h3>
+      <p>
+        Para identificar falhas técnicas e melhorar a estabilidade dos aplicativos, serviços da própria loja ou ferramentas integradas (como Google Play Console / Android Vitals ou Firebase Crashlytics, quando aplicável) podem coletar registros técnicos anonimizados de falhas (<em>crash logs</em>), versão do aplicativo, modelo do dispositivo e versão do sistema operacional.
+      </p>
+
+      <h2>3. Anúncios e Serviços de Terceiros</h2>
+      <p>
+        Para manter nossos jogos gratuitos ou acessíveis, alguns aplicativos utilizam serviços de publicidade de terceiros, principalmente o <strong>Google Mobile Ads (AdMob)</strong>, para exibição de anúncios (banners, intersticiais, anúncios nativos e vídeos premiados opcionais).
+      </p>
+      <p>
+        Os SDKs de parceiros de publicidade e plataforma podem coletar automaticamente determinados dados técnicos do dispositivo, tais como:
+      </p>
+      <ul>
+        <li><strong>Identificadores de publicidade e do dispositivo</strong> (Advertising ID no Android / IDFA no iOS, mediante consentimento quando exigido);</li>
+        <li><strong>Localização aproximada</strong> (derivada do endereço IP, usada para segmentação regional, conformidade legal e prevenção contra fraudes);</li>
+        <li><strong>Informações de dispositivo, uso e diagnóstico</strong> (modelo, versão do sistema operacional, interações com anúncios e métricas de desempenho).</li>
+      </ul>
+      <p>
+        Você pode gerenciar suas preferências de consentimento pelo aviso de privacidade no aplicativo (como o Google UMP, quando exibido) ou desativar anúncios personalizados diretamente nas configurações do seu aparelho:
+      </p>
+      <ul>
+        <li><strong>Android:</strong> <em>Configurações → Google → Anúncios → Excluir código de publicidade</em></li>
+        <li><strong>iOS:</strong> <em>Ajustes → Privacidade e Segurança → Rastreamento</em></li>
+      </ul>
+      <p>
+        Consulte as políticas de privacidade dos principais parceiros utilizados pela plataforma:
+      </p>
+      <ul>
+        <li><a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google / Google Play Services</a></li>
+        <li><a href="https://support.google.com/admob/answer/6128543" target="_blank" rel="noopener noreferrer">Privacidade e dados do Google AdMob</a></li>
+        <li><a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener noreferrer">Política de Privacidade da Apple</a></li>
+      </ul>
+
+      <h2>4. Compras no Aplicativo e Assinaturas</h2>
+      <p>
+        Nossos aplicativos podem oferecer compras opcionais no aplicativo (<em>In-App Purchases</em>) e/ou assinaturas (como remoção de anúncios, pacotes de itens ou benefícios VIP).
+      </p>
+      <p>
+        Todas as transações financeiras são processadas exclusivamente pela <strong>Google Play Store (Google Play Billing)</strong> ou pela <strong>Apple App Store</strong>.
+        <strong>Um Futuro Próximo não coleta, não acessa e não armazena dados de cartão de crédito, PIX, senhas ou informações bancárias.</strong>
+      </p>
+
+      <h2>5. Privacidade de Crianças</h2>
+      <p>
+        Salvo indicação expressa na página específica da loja, nossos jogos são destinados a um público geral com
+        <strong>13 anos ou mais</strong> e não coletam intencionalmente dados pessoais identificáveis de crianças menores de 13 anos (ou abaixo da idade mínima aplicável na legislação local).
+      </p>
+      <p>
+        Caso pais ou responsáveis acreditem que uma criança forneceu informações pessoais indevidamente, entre em contato pelo e-mail <a href="mailto:rmalfer@gmail.com">rmalfer@gmail.com</a> para verificação e exclusão imediata.
+      </p>
+
+      <h2>6. Segurança, Retenção e Exclusão de Dados</h2>
+      <ul>
+        <li><strong>Criptografia em trânsito:</strong> toda comunicação realizada por SDKs oficiais de terceiros (como Google AdMob e Google Play Services) ocorre por conexões criptografadas (HTTPS/TLS).</li>
+        <li><strong>Exclusão de dados locais:</strong> como o progresso do jogo é salvo apenas no seu dispositivo, você pode apagar todos os dados a qualquer momento limpando o armazenamento do aplicativo nas configurações do aparelho ou desinstalando o jogo.</li>
+        <li><strong>Exclusão e retenção por terceiros:</strong> dados técnicos tratados por parceiros (como o Google) seguem as políticas e prazos de retenção de cada fornecedor.</li>
+        <li><strong>Solicitação direta de exclusão:</strong> caso deseje solicitar esclarecimentos ou a exclusão de qualquer contato enviado por e-mail ao nosso suporte, escreva para <a href="mailto:rmalfer@gmail.com">rmalfer@gmail.com</a> informando o nome do jogo.</li>
+      </ul>
+
+      <h2>7. Seus Direitos (LGPD, GDPR e CCPA)</h2>
+      <p>
+        Dependendo da sua jurisdição (incluindo Brasil — LGPD, União Europeia — GDPR e Califórnia — CCPA), você tem o direito de:
+      </p>
+      <ul>
+        <li>Confirmar a existência de tratamento e obter informações sobre os dados utilizados;</li>
+        <li>Solicitar esclarecimentos sobre SDKs e parceiros de terceiros;</li>
+        <li>Revogar consentimento para publicidade personalizada a qualquer momento nas configurações do dispositivo ou no aviso de consentimento do aplicativo;</li>
+        <li>Solicitar a eliminação de eventuais comunicações enviadas ao suporte.</li>
+      </ul>
+
+      <h2>8. Alterações nesta Política</h2>
+      <p>
+        Podemos atualizar esta Política de Privacidade periodicamente para refletir novos jogos, recursos ou exigências legais e das lojas de aplicativos. A versão vigente estará sempre disponível em:
+        <a href="https://www.umfuturoproximo.com.br/jogos/politica.html">https://www.umfuturoproximo.com.br/jogos/politica.html</a>
+      </p>
+
+      <h2>9. Contato do Desenvolvedor</h2>
+      <p>
+        Para dúvidas sobre esta Política de Privacidade, suporte técnico ou solicitações relacionadas a dados pessoais, entre em contato:
+      </p>
+      <div class="contact-box">
+        <p><strong>Desenvolvedor / Controlador:</strong> Um Futuro Próximo (Riccardo Malfer)</p>
+        <p><strong>E-mail de suporte e privacidade:</strong> <a href="mailto:rmalfer@gmail.com">rmalfer@gmail.com</a></p>
+        <p><strong>Site oficial:</strong> <a href="https://www.umfuturoproximo.com.br">https://www.umfuturoproximo.com.br</a></p>
+        <p><strong>URL desta política:</strong> <a href="https://www.umfuturoproximo.com.br/jogos/politica.html">https://www.umfuturoproximo.com.br/jogos/politica.html</a></p>
+      </div>
+    </article>
+
+    <section id="english-version" class="english-card" lang="en">
+      <div class="english-badge">English Version</div>
+      <h2>Privacy Policy — Mobile Games &amp; Apps</h2>
+      <div class="english-meta">
+        <strong>Last updated:</strong> November 28, 2026 &nbsp;|&nbsp;
+        <strong>Developer:</strong> Um Futuro Próximo (Riccardo Malfer) &nbsp;|&nbsp;
+        <strong>Contact:</strong> <a href="mailto:rmalfer@gmail.com">rmalfer@gmail.com</a>
+      </div>
+
+      <h3>1. Scope</h3>
+      <p>
+        This Privacy Policy applies to all mobile games and applications published by <strong>Um Futuro Próximo</strong> on the <strong>Google Play Store</strong> and the <strong>Apple App Store</strong> that link to this page.
+      </p>
+
+      <h3>2. Data Collection &amp; Local Storage</h3>
+      <p>
+        Our games do not require account creation, login, or personal contact details to play. Game progress (such as unlocked levels, scores, stars, virtual currency, items, skins, and app settings) is stored locally on your device only and is not transmitted to our own servers.
+      </p>
+
+      <h3>3. Advertising, Diagnostics &amp; Third-Party Services</h3>
+      <p>
+        To keep our games free, we may use third-party services such as <strong>Google AdMob</strong> and <strong>Google Play Services</strong> to display ads and monitor app stability. These partners may automatically collect technical information such as device advertising identifiers (Advertising ID / IDFA), approximate IP-based location, crash logs, and ad interaction diagnostics in accordance with their privacy policies (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a>).
+      </p>
+      <p>
+        You can manage consent choices via the in-app privacy prompt (when shown) or opt out of personalized ads in your device settings (Android: <em>Settings → Google → Ads</em>; iOS: <em>Settings → Privacy &amp; Security → Tracking</em>).
+      </p>
+
+      <h3>4. In-App Purchases &amp; Subscriptions</h3>
+      <p>
+        Optional in-app purchases and subscriptions are processed solely by <strong>Google Play Billing</strong> or the <strong>Apple App Store</strong>. We never access, collect, or store your payment or billing information.
+      </p>
+
+      <h3>5. Children's Privacy</h3>
+      <p>
+        Unless explicitly stated otherwise in an app's store listing, our games are intended for general audiences aged <strong>13 and older</strong> and do not knowingly collect personally identifiable information from children under 13. Parents or guardians who believe data was provided inadvertently may contact us at <a href="mailto:rmalfer@gmail.com">rmalfer@gmail.com</a> for immediate review and removal.
+      </p>
+
+      <h3>6. Security, Data Retention &amp; Deletion</h3>
+      <p>
+        All data transmitted by third-party SDKs is encrypted in transit (HTTPS/TLS). You can delete all locally stored game data at any time by clearing the app's storage in your device settings or uninstalling the app. For any privacy or data deletion inquiries, contact us at <a href="mailto:rmalfer@gmail.com"><strong>rmalfer@gmail.com</strong></a>.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      © 2026 <a href="https://www.umfuturoproximo.com.br">Um Futuro Próximo</a> •
+      <a href="https://www.umfuturoproximo.com.br/privacidade">Privacidade do Portal</a> •
+      <a href="https://www.umfuturoproximo.com.br/contato">Contato</a>
+    </p>
+  </footer>
+</body>
+</html>

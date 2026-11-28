@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidade — Joaninhas Pixel: Jogo de Cores (Ladybug Feast) | Um Futuro Próximo</title>
+  <meta
+    name="description"
+    content="Política de Privacidade do aplicativo Joaninhas Pixel: Jogo de Cores (Ladybug Feast), desenvolvido por Um Futuro Próximo. Em conformidade com LGPD, GDPR, Google Play e Apple App Store."
+  />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.umfuturoproximo.com.br/jogos/joaninha.html" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --dark: #0a0a0a;
+      --dark-surface: #141414;
+      --green: #00d66c;
+      --green-dark: #059669;
+      --green-light: #e6fbf1;
+      --text: #171717;
+      --muted: #525252;
+      --subtle: #737373;
+      --border: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--green-dark);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    a:hover {
+      color: var(--dark);
+    }
+
+    /* Top bar */
+    .topbar {
+      background-color: var(--dark);
+      border-bottom: 1px solid #262626;
+      padding: 0.85rem 1.25rem;
+    }
+
+    .topbar-inner {
+      max-width: 896px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand:hover {
+      color: var(--green);
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background-color: var(--green);
+      display: inline-block;
+    }
+
+    .lang-jump {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #d4d4d4;
+      text-decoration: none;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid #333333;
+      border-radius: 999px;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .lang-jump:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* Main container */
+    main {
+      max-width: 896px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    /* Hero header */
+    .hero {
+      background-color: var(--dark);
+      color: #ffffff;
+      border-radius: 1rem;
+      padding: 2.25rem 2rem;
+      border-bottom: 4px solid var(--green);
+      margin-bottom: 2rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background-color: var(--green);
+      color: #000000;
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.3rem 0.7rem;
+      border-radius: 0.375rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.65rem, 4vw, 2.5rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      color: #ffffff;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-sub {
+      color: #a3a3a3;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid #262626;
+      font-size: 0.85rem;
+      color: #d4d4d4;
+    }
+
+    .meta-grid strong {
+      color: #ffffff;
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #a3a3a3;
+      margin-bottom: 0.15rem;
+    }
+
+    .meta-grid a {
+      color: var(--green);
+      word-break: break-word;
+    }
+
+    /* Content cards */
+    .card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .card h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--dark);
+      letter-spacing: -0.015em;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .card h2:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .card ul {
+      margin: 0.5rem 0 1rem 1.35rem;
+      color: var(--muted);
+    }
+
+    .card li {
+      margin-bottom: 0.45rem;
+    }
+
+    .card strong {
+      color: var(--text);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88em;
+      background-color: #f3f4f6;
+      color: #111827;
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.25rem;
+    }
+
+    .callout {
+      background-color: #f8fafc;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--green);
+      border-radius: 0.75rem;
+      padding: 1.15rem 1.25rem;
+      margin: 1rem 0;
+      font-size: 0.94rem;
+    }
+
+    .callout p:last-child,
+    .callout ul:last-child {
+      margin-bottom: 0;
+    }
+
+    .contact-box {
+      background-color: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .contact-box p {
+      margin-bottom: 0.4rem;
+      font-size: 0.94rem;
+    }
+
+    .contact-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* English section */
+    .english-card {
+      background-color: #ffffff;
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--dark);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .english-badge {
+      display: inline-block;
+      background-color: #f3f4f6;
+      color: var(--dark);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 0.375rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .english-card h2 {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--dark);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .english-meta {
+      font-size: 0.88rem;
+      color: var(--subtle);
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .english-card p {
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .english-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem 1.25rem 2.5rem;
+      color: var(--subtle);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+      background-color: var(--surface);
+    }
+
+    footer a {
+      color: var(--subtle);
+    }
+
+    footer a:hover {
+      color: var(--dark);
+    }
+
+    @media (max-width: 640px) {
+      .hero,
+      .card,
+      .english-card {
+        padding: 1.5rem 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="https://www.umfuturoproximo.com.br">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span>Um Futuro Próximo</span>
+      </a>
+      <a class="lang-jump" href="#english-summary">English Summary ↓</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="badge">🐞 Política de Privacidade • Jogos</div>
+      <h1>Joaninhas Pixel: Jogo de Cores (Ladybug Feast)</h1>
+      <p class="hero-sub">
+        Transparência e conformidade com a LGPD (Lei nº 13.709/2018), GDPR, Google Play Store e Apple App Store.
+      </p>
+      <div class="meta-grid">
+        <div>
+          <strong>Última atualização</strong>
+          28 de novembro de 2026
+        </div>
+        <div>
+          <strong>Desenvolvedor</strong>
+          Um Futuro Próximo
+        </div>
+        <div>
+          <strong>URL oficial</strong>
+          <a href="https://www.umfuturoproximo.com.br/jogos/joaninha.html">www.umfuturoproximo.com.br/jogos/joaninha.html</a>
+        </div>
+        <div>
+          <strong>Suporte e privacidade</strong>
+          <a href="mailto:rmalfer@gmail.com">rmalfer@gmail.com</a>
+        </div>
+      </div>
+    </section>
+
+    <article class="card">
+      <h2>1. Introdução</h2>
+      <p>
+        Esta Política de Privacidade descreve como o aplicativo <strong>Joaninhas Pixel: Jogo de Cores</strong>
+        (também distribuído internacionalmente como <strong>Ladybug Feast</strong>), desenvolvido por
+        <strong>Um Futuro Próximo</strong>, trata as informações dos usuários.
+      </p>
+      <p>
+        Nosso compromisso é oferecer uma experiência de jogo divertida, segura e transparente, respeitando a
+        <strong>Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)</strong>, o
+        <strong>Regulamento Geral sobre a Proteção de Dados da União Europeia (GDPR)</strong> e as políticas da
+        <strong>Google Play Store</strong> e da <strong>Apple App Store</strong>.
+      </p>
+
+      <h2>2. Dados Coletados e Armazenamento Local</h2>
+      <p>
+        O aplicativo <strong>não exige criação de conta, login, nome, CPF, endereço ou e-mail</strong> para ser jogado.
+      </p>
+
+      <h3>2.1 Dados salvos apenas no seu dispositivo</h3>
+      <p>
+        Para manter seu progresso, o jogo salva localmente no armazenamento interno do aparelho
+        (<code>SharedPreferences</code>):
+      </p>
+      <ul>
+        <li>Fases desbloqueadas e estrelas conquistadas;</li>
+        <li>Saldo de moedas, dicas, missões e skins desbloqueadas;</li>
+        <li>Preferências de som, música, vibração tátil, idioma, tema visual e velocidade;</li>
+        <li>Registro de recompensas diárias e status de assinatura VIP.</li>
+      </ul>
+      <div class="callout">
+        <p>
+          Esses dados <strong>permanecem exclusivamente no seu dispositivo</strong> e não são enviados para servidores próprios do desenvolvedor.
+        </p>
+      </div>
+
+      <h2>3. Anúncios e Serviços de Terceiros (Google AdMob)</h2>
+      <p>
+        Para manter o jogo gratuito, o aplicativo utiliza o <strong>Google Mobile Ads (AdMob)</strong> para exibição de anúncios (banners, intersticiais e vídeos premiados opcionais).
+      </p>
+      <p>
+        O SDK do Google AdMob pode coletar automaticamente determinados dados técnicos do dispositivo, tais como:
+      </p>
+      <ul>
+        <li><strong>Identificadores de publicidade</strong> (Advertising ID no Android / IDFA no iOS, mediante consentimento);</li>
+        <li><strong>Endereço IP aproximado</strong> (para localização geral e prevenção contra fraudes);</li>
+        <li><strong>Informações do dispositivo e diagnóstico</strong> (modelo, versão do sistema operacional, interações com anúncios e relatórios de desempenho).</li>
+      </ul>
+      <p>
+        Você pode gerenciar suas preferências de consentimento pelo aviso de privacidade (Google UMP) ou desativar anúncios personalizados diretamente nas configurações do seu aparelho:
+      </p>
+      <ul>
+        <li><strong>Android:</strong> <em>Configurações → Google → Anúncios → Excluir código de publicidade</em></li>
+        <li><strong>iOS:</strong> <em>Ajustes → Privacidade e Segurança → Rastreamento</em></li>
+      </ul>
+      <p>
+        Para saber mais sobre como o Google trata esses dados, consulte a Política de Privacidade do Google:
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">https://policies.google.com/privacy</a>
+      </p>
+
+      <h2>4. Compras no Aplicativo e Assinaturas (VIP)</h2>
+      <p>
+        O aplicativo pode oferecer compras opcionais e assinatura VIP (como remoção de anúncios e benefícios extras).
+        Todas as transações financeiras são processadas exclusivamente pela <strong>Google Play Store</strong> ou pela <strong>Apple App Store</strong>.
+      </p>
+      <p>
+        <strong>Um Futuro Próximo não coleta, não visualiza e não armazena dados de cartão de crédito, PIX ou informações bancárias.</strong>
+      </p>
+
+      <h2>5. Privacidade de Crianças</h2>
+      <p>
+        O aplicativo <strong>Joaninhas Pixel: Jogo de Cores</strong> é destinado a um público geral com
+        <strong>13 anos ou mais</strong> e não coleta intencionalmente dados pessoais identificáveis de crianças menores de 13 anos. Caso pais ou responsáveis acreditem que alguma informação foi fornecida indevidamente, entre em contato pelo e-mail informado nesta política para imediata verificação.
+      </p>
+
+      <h2>6. Segurança e Exclusão de Dados</h2>
+      <ul>
+        <li><strong>Dados locais:</strong> você pode apagar todo o progresso salvo a qualquer momento limpando os dados do aplicativo nas configurações do seu dispositivo ou desinstalando o jogo.</li>
+        <li><strong>Dados tratados por parceiros (Google AdMob):</strong> são protegidos por criptografia em trânsito (HTTPS/TLS) e seguem os prazos de retenção do Google.</li>
+      </ul>
+
+      <h2>7. Seus Direitos (LGPD e GDPR)</h2>
+      <p>De acordo com a LGPD e o GDPR, você tem o direito de:</p>
+      <ul>
+        <li>Confirmar a existência de tratamento de dados;</li>
+        <li>Solicitar esclarecimentos sobre os parceiros utilizados;</li>
+        <li>Revogar consentimento para anúncios personalizados a qualquer momento nas configurações do dispositivo ou do aplicativo.</li>
+      </ul>
+
+      <h2>8. Alterações nesta Política</h2>
+      <p>
+        Podemos atualizar esta Política de Privacidade periodicamente para refletir melhorias no jogo ou exigências legais. A versão mais recente estará sempre disponível em:
+        <a href="https://www.umfuturoproximo.com.br/jogos/joaninha.html">https://www.umfuturoproximo.com.br/jogos/joaninha.html</a>
+      </p>
+
+      <h2>9. Contato</h2>
+      <p>Em caso de dúvidas sobre esta Política de Privacidade ou sobre o aplicativo, fale conosco:</p>
+      <div class="contact-box">
+        <p><strong>Responsável:</strong> Um Futuro Próximo</p>
+        <p><strong>E-mail:</strong> <a href="mailto:rmalfer@gmail.com">rmalfer@gmail.com</a></p>
+        <p><strong>Site:</strong> <a href="https://www.umfuturoproximo.com.br/jogos/joaninha.html">https://www.umfuturoproximo.com.br/jogos/joaninha.html</a></p>
+      </div>
+    </article>
+
+    <section id="english-summary" class="english-card" lang="en">
+      <div class="english-badge">English Summary</div>
+      <h2>Privacy Policy — Ladybug Feast</h2>
+      <div class="english-meta">
+        <strong>Last updated:</strong> November 28, 2026 &nbsp;|&nbsp;
+        <strong>Developer:</strong> Um Futuro Próximo &nbsp;|&nbsp;
+        <strong>Contact:</strong> <a href="mailto:rmalfer@gmail.com">rmalfer@gmail.com</a>
+      </div>
+      <p>
+        <strong>Ladybug Feast (Joaninhas Pixel: Jogo de Cores)</strong> does not require user registration or login. Game progress (unlocked levels, stars, coins, skins, missions, and settings) is stored locally on your device only.
+      </p>
+      <p>
+        To keep the game free, we use <strong>Google AdMob</strong> to serve ads. Google may collect device identifiers (such as Advertising ID), approximate IP-based location, and ad performance diagnostics in accordance with Google's Privacy Policy (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">https://policies.google.com/privacy</a>). You can opt out of personalized ads in your device's privacy settings.
+      </p>
+      <p>
+        Optional in-app purchases and VIP subscriptions are processed solely by <strong>Google Play</strong> or the <strong>Apple App Store</strong>. We never access or store your payment information.
+      </p>
+      <p>
+        This game is intended for audiences aged <strong>13 and older</strong>. You may clear all local game data at any time by uninstalling the app or clearing app storage on your device. For any privacy inquiries, contact us at <a href="mailto:rmalfer@gmail.com"><strong>rmalfer@gmail.com</strong></a>.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      © 2026 <a href="https://www.umfuturoproximo.com.br">Um Futuro Próximo</a> •
+      <a href="https://www.umfuturoproximo.com.br/privacidade">Privacidade do Portal</a> •
+      <a href="https://www.umfuturoproximo.com.br/contato">Contato</a>
+    </p>
+  </footer>
+</body>
+</html>
